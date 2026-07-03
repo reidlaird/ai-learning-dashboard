@@ -84,6 +84,9 @@
   .flash-controls button:hover{border-color:var(--accent);}
   .flash-count{color:var(--muted); font-size:.85rem;}
   .hint{color:var(--muted); font-size:.82rem; font-style:italic;}
+  svg.viz{display:block; margin:12px auto 14px; width:100%; max-width:480px; height:auto;}
+  svg.viz text{font-family:"Segoe UI",system-ui,sans-serif;}
+  .viz-caption{text-align:center; color:var(--muted); font-size:.8rem; font-style:italic; margin:-6px 0 12px;}
   footer{margin-top:40px; color:var(--muted); font-size:.8rem; text-align:center;}
 </style>
 </head>
@@ -128,6 +131,25 @@
     <details class="card">
       <summary>Types of machine learning <span class="tag">core</span></summary>
       <div class="body">
+        <svg class="viz" viewBox="0 0 520 190" role="img" aria-label="Machine learning taxonomy diagram">
+          <line x1="260" y1="40" x2="130" y2="75" stroke="var(--border)" stroke-width="2"/>
+          <line x1="260" y1="40" x2="390" y2="75" stroke="var(--border)" stroke-width="2"/>
+          <line x1="130" y1="105" x2="70" y2="145" stroke="var(--border)" stroke-width="2"/>
+          <line x1="130" y1="105" x2="195" y2="145" stroke="var(--border)" stroke-width="2"/>
+          <line x1="390" y1="105" x2="390" y2="145" stroke="var(--border)" stroke-width="2"/>
+          <rect x="185" y="10" width="150" height="30" rx="8" fill="var(--panel2)" stroke="var(--accent)"/>
+          <text x="260" y="30" text-anchor="middle" fill="var(--text)" font-size="13" font-weight="600">Machine Learning</text>
+          <rect x="35" y="75" width="190" height="30" rx="8" fill="var(--panel2)" stroke="var(--accent2)"/>
+          <text x="130" y="95" text-anchor="middle" fill="var(--text)" font-size="12">Supervised · has labels</text>
+          <rect x="295" y="75" width="190" height="30" rx="8" fill="var(--panel2)" stroke="var(--accent2)"/>
+          <text x="390" y="95" text-anchor="middle" fill="var(--text)" font-size="12">Unsupervised · no labels</text>
+          <rect x="15" y="145" width="110" height="28" rx="8" fill="var(--panel2)" stroke="var(--green)"/>
+          <text x="70" y="164" text-anchor="middle" fill="var(--text)" font-size="12">Regression</text>
+          <rect x="135" y="145" width="120" height="28" rx="8" fill="var(--panel2)" stroke="var(--green)"/>
+          <text x="195" y="164" text-anchor="middle" fill="var(--text)" font-size="12">Classification</text>
+          <rect x="335" y="145" width="110" height="28" rx="8" fill="var(--panel2)" stroke="var(--green)"/>
+          <text x="390" y="164" text-anchor="middle" fill="var(--text)" font-size="12">Clustering</text>
+        </svg>
         <p><b>Supervised learning</b> — training data includes known label values.</p>
         <table>
           <tr><th>Type</th><th>Predicts</th><th>Example</th></tr>
@@ -143,6 +165,21 @@
       <summary>Regression &amp; its evaluation metrics</summary>
       <div class="body">
         <p>Training is iterative: split data into <b>training</b> and <b>validation</b> sets, fit a function (e.g., linear regression), predict on the held-out set, compare <code>ŷ</code> to actual <code>y</code>, then adjust and repeat.</p>
+        <svg class="viz" viewBox="0 0 320 190" role="img" aria-label="Scatter plot with fitted regression line">
+          <line x1="40" y1="160" x2="300" y2="160" stroke="var(--muted)" stroke-width="1.5"/>
+          <line x1="40" y1="160" x2="40" y2="20" stroke="var(--muted)" stroke-width="1.5"/>
+          <text x="170" y="182" text-anchor="middle" fill="var(--muted)" font-size="11">feature (x) — e.g. temperature</text>
+          <text x="18" y="90" text-anchor="middle" fill="var(--muted)" font-size="11" transform="rotate(-90 18 90)">label (y) — sales</text>
+          <line x1="50" y1="150" x2="290" y2="45" stroke="var(--green)" stroke-width="2.5"/>
+          <circle cx="60" cy="140" r="4" fill="var(--accent)"/><circle cx="85" cy="128" r="4" fill="var(--accent)"/>
+          <circle cx="105" cy="135" r="4" fill="var(--accent)"/><circle cx="125" cy="110" r="4" fill="var(--accent)"/>
+          <circle cx="150" cy="105" r="4" fill="var(--accent)"/><circle cx="170" cy="112" r="4" fill="var(--accent)"/>
+          <circle cx="190" cy="85" r="4" fill="var(--accent)"/><circle cx="215" cy="80" r="4" fill="var(--accent)"/>
+          <circle cx="235" cy="88" r="4" fill="var(--accent)"/><circle cx="255" cy="60" r="4" fill="var(--accent)"/>
+          <circle cx="275" cy="55" r="4" fill="var(--accent)"/>
+          <text x="228" y="42" fill="var(--green)" font-size="12" font-weight="600">y = f(x)</text>
+        </svg>
+        <p class="viz-caption">The algorithm fits a line (function) through past observations; new x values slot into it to predict y.</p>
         <table>
           <tr><th>Metric</th><th>Meaning</th></tr>
           <tr><td>MAE</td><td>Mean absolute error — average size of errors, all weighted equally</td></tr>
@@ -157,6 +194,22 @@
       <summary>Binary classification &amp; the confusion matrix</summary>
       <div class="body">
         <p>Algorithms (e.g., <b>logistic regression</b>) calculate the <b>probability</b> of the positive class; a threshold (typically 0.5) turns that into a predicted label.</p>
+        <svg class="viz" viewBox="0 0 320 190" role="img" aria-label="Two classes of points separated by a decision boundary">
+          <line x1="40" y1="160" x2="300" y2="160" stroke="var(--muted)" stroke-width="1.5"/>
+          <line x1="40" y1="160" x2="40" y2="20" stroke="var(--muted)" stroke-width="1.5"/>
+          <text x="170" y="182" text-anchor="middle" fill="var(--muted)" font-size="11">feature 1 — e.g. blood glucose</text>
+          <text x="18" y="90" text-anchor="middle" fill="var(--muted)" font-size="11" transform="rotate(-90 18 90)">feature 2 — weight</text>
+          <line x1="115" y1="25" x2="290" y2="155" stroke="var(--muted)" stroke-width="2" stroke-dasharray="6 5"/>
+          <circle cx="70" cy="130" r="5" fill="var(--accent)"/><circle cx="90" cy="142" r="5" fill="var(--accent)"/>
+          <circle cx="85" cy="112" r="5" fill="var(--accent)"/><circle cx="112" cy="127" r="5" fill="var(--accent)"/>
+          <circle cx="122" cy="147" r="5" fill="var(--accent)"/><circle cx="65" cy="102" r="5" fill="var(--accent)"/>
+          <circle cx="200" cy="60" r="5" fill="var(--amber)"/><circle cx="222" cy="75" r="5" fill="var(--amber)"/>
+          <circle cx="242" cy="55" r="5" fill="var(--amber)"/><circle cx="212" cy="42" r="5" fill="var(--amber)"/>
+          <circle cx="255" cy="82" r="5" fill="var(--amber)"/><circle cx="232" cy="95" r="5" fill="var(--amber)"/>
+          <circle cx="60" cy="35" r="5" fill="var(--accent)"/><text x="72" y="39" fill="var(--muted)" font-size="11">class 0 (not at risk)</text>
+          <circle cx="60" cy="52" r="5" fill="var(--amber)"/><text x="72" y="56" fill="var(--muted)" font-size="11">class 1 (at risk)</text>
+        </svg>
+        <p class="viz-caption">The model learns a decision boundary (dashed); which side a new observation lands on decides its predicted class.</p>
         <p>Predictions vs. reality form the <b>confusion matrix</b>: true positives (TP), true negatives (TN), false positives (FP), false negatives (FN).</p>
         <table>
           <tr><th>Metric</th><th>Formula</th><th>Answers</th></tr>
@@ -175,6 +228,19 @@
       <div class="body">
         <p>Predicts one of several possible classes. Two common approaches:</p>
         <p><b>One-vs-Rest (OvR)</b> — train a binary function per class ("Gentoo or not?"), pick the highest score. <b>Multinomial</b> — a single function (e.g., <b>softmax</b>) outputs a probability distribution across all classes, e.g. <code>[0.2, 0.7, 0.1]</code>, which sums to 1.</p>
+        <svg class="viz" viewBox="0 0 320 160" role="img" aria-label="Bar chart of softmax probabilities across three penguin classes">
+          <line x1="40" y1="120" x2="300" y2="120" stroke="var(--muted)" stroke-width="1.5"/>
+          <rect x="65" y="100" width="46" height="20" rx="3" fill="var(--accent)"/>
+          <rect x="140" y="50" width="46" height="70" rx="3" fill="var(--green)"/>
+          <rect x="215" y="110" width="46" height="10" rx="3" fill="var(--amber)"/>
+          <text x="88" y="93" text-anchor="middle" fill="var(--text)" font-size="12">0.2</text>
+          <text x="163" y="43" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="700">0.7 ✓</text>
+          <text x="238" y="103" text-anchor="middle" fill="var(--text)" font-size="12">0.1</text>
+          <text x="88" y="138" text-anchor="middle" fill="var(--muted)" font-size="11">Adelie</text>
+          <text x="163" y="138" text-anchor="middle" fill="var(--muted)" font-size="11">Gentoo</text>
+          <text x="238" y="138" text-anchor="middle" fill="var(--muted)" font-size="11">Chinstrap</text>
+          <text x="170" y="155" text-anchor="middle" fill="var(--muted)" font-size="10" font-style="italic">softmax output — probabilities sum to 1; highest wins</text>
+        </svg>
       </div>
     </details>
 
@@ -182,6 +248,24 @@
       <summary>Clustering (unsupervised)</summary>
       <div class="body">
         <p>Groups unlabeled observations by feature similarity. The most common algorithm is <b>k-means</b>: pick k centroids, assign each point to its nearest centroid, move centroids to their cluster's mean, repeat until stable.</p>
+        <svg class="viz" viewBox="0 0 320 190" role="img" aria-label="Three clusters of points, each with a centroid">
+          <ellipse cx="85" cy="62" rx="42" ry="34" fill="none" stroke="var(--green)" stroke-dasharray="5 4"/>
+          <circle cx="70" cy="55" r="4" fill="var(--green)"/><circle cx="92" cy="45" r="4" fill="var(--green)"/>
+          <circle cx="100" cy="72" r="4" fill="var(--green)"/><circle cx="75" cy="78" r="4" fill="var(--green)"/>
+          <circle cx="88" cy="62" r="4" fill="var(--green)"/>
+          <text x="85" y="66" text-anchor="middle" fill="var(--text)" font-size="13" font-weight="700" dx="14" dy="-10">✕</text>
+          <ellipse cx="230" cy="72" rx="42" ry="34" fill="none" stroke="var(--accent)" stroke-dasharray="5 4"/>
+          <circle cx="214" cy="62" r="4" fill="var(--accent)"/><circle cx="240" cy="56" r="4" fill="var(--accent)"/>
+          <circle cx="246" cy="82" r="4" fill="var(--accent)"/><circle cx="219" cy="88" r="4" fill="var(--accent)"/>
+          <circle cx="232" cy="72" r="4" fill="var(--accent)"/>
+          <text x="230" y="76" text-anchor="middle" fill="var(--text)" font-size="13" font-weight="700" dx="14" dy="-10">✕</text>
+          <ellipse cx="155" cy="145" rx="42" ry="32" fill="none" stroke="var(--amber)" stroke-dasharray="5 4"/>
+          <circle cx="138" cy="135" r="4" fill="var(--amber)"/><circle cx="165" cy="129" r="4" fill="var(--amber)"/>
+          <circle cx="170" cy="155" r="4" fill="var(--amber)"/><circle cx="143" cy="158" r="4" fill="var(--amber)"/>
+          <circle cx="155" cy="144" r="4" fill="var(--amber)"/>
+          <text x="155" y="149" text-anchor="middle" fill="var(--text)" font-size="13" font-weight="700" dx="14" dy="-10">✕</text>
+        </svg>
+        <p class="viz-caption">No labels needed — the algorithm discovers the groups itself. ✕ marks each cluster's centroid.</p>
         <p>Evaluation is different without labels — metrics measure cluster separation, e.g. average distance to cluster center and <b>silhouette</b> (−1 to 1; closer to 1 = tight, well-separated clusters).</p>
       </div>
     </details>
@@ -190,6 +274,33 @@
       <summary>Deep learning (the bridge to the next section)</summary>
       <div class="body">
         <p>An advanced form of ML using artificial <b>neural networks</b> — layers of neurons, each a function applying a <b>weight</b> (<code>w</code>) to inputs, wrapped in an <b>activation function</b> that decides whether the signal passes on. Many layers = a deeply nested function, hence "deep".</p>
+        <svg class="viz" viewBox="0 0 340 210" role="img" aria-label="Neural network with input, hidden, and output layers">
+          <g stroke="var(--border)" stroke-width="1">
+            <line x1="52" y1="60" x2="158" y2="40"/><line x1="52" y1="60" x2="158" y2="85"/><line x1="52" y1="60" x2="158" y2="130"/><line x1="52" y1="60" x2="158" y2="175"/>
+            <line x1="52" y1="105" x2="158" y2="40"/><line x1="52" y1="105" x2="158" y2="85"/><line x1="52" y1="105" x2="158" y2="130"/><line x1="52" y1="105" x2="158" y2="175"/>
+            <line x1="52" y1="150" x2="158" y2="40"/><line x1="52" y1="150" x2="158" y2="85"/><line x1="52" y1="150" x2="158" y2="130"/><line x1="52" y1="150" x2="158" y2="175"/>
+            <line x1="182" y1="40" x2="288" y2="60"/><line x1="182" y1="40" x2="288" y2="105"/><line x1="182" y1="40" x2="288" y2="150"/>
+            <line x1="182" y1="85" x2="288" y2="60"/><line x1="182" y1="85" x2="288" y2="105"/><line x1="182" y1="85" x2="288" y2="150"/>
+            <line x1="182" y1="130" x2="288" y2="60"/><line x1="182" y1="130" x2="288" y2="105"/><line x1="182" y1="130" x2="288" y2="150"/>
+            <line x1="182" y1="175" x2="288" y2="60"/><line x1="182" y1="175" x2="288" y2="105"/><line x1="182" y1="175" x2="288" y2="150"/>
+          </g>
+          <g fill="var(--panel2)">
+            <circle cx="40" cy="60" r="12" stroke="var(--accent)" stroke-width="2"/>
+            <circle cx="40" cy="105" r="12" stroke="var(--accent)" stroke-width="2"/>
+            <circle cx="40" cy="150" r="12" stroke="var(--accent)" stroke-width="2"/>
+            <circle cx="170" cy="40" r="12" stroke="var(--accent2)" stroke-width="2"/>
+            <circle cx="170" cy="85" r="12" stroke="var(--accent2)" stroke-width="2"/>
+            <circle cx="170" cy="130" r="12" stroke="var(--accent2)" stroke-width="2"/>
+            <circle cx="170" cy="175" r="12" stroke="var(--accent2)" stroke-width="2"/>
+            <circle cx="300" cy="60" r="12" stroke="var(--green)" stroke-width="2"/>
+            <circle cx="300" cy="105" r="12" stroke="var(--green)" stroke-width="2"/>
+            <circle cx="300" cy="150" r="12" stroke="var(--green)" stroke-width="2"/>
+          </g>
+          <text x="40" y="200" text-anchor="middle" fill="var(--muted)" font-size="11">input (x)</text>
+          <text x="170" y="200" text-anchor="middle" fill="var(--muted)" font-size="11">hidden layers</text>
+          <text x="300" y="200" text-anchor="middle" fill="var(--muted)" font-size="11">output (ŷ)</text>
+        </svg>
+        <p class="viz-caption">Each connection carries a weight; each node sums its weighted inputs and passes them through an activation function.</p>
         <p>Training: feed features forward through layers → compare output <code>ŷ</code> to known <code>y</code> with a <b>loss function</b> → use <b>gradient descent</b> to work out how each weight should change → <b>backpropagate</b> the adjustments → repeat over <b>epochs</b>. Data is processed as matrices, which is why GPUs matter.</p>
       </div>
     </details>
