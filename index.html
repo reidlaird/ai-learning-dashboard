@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reid's AI Learning Dashboard</title>
+<style>
+  :root{
+    --bg:#0f1420; --panel:#1a2233; --panel2:#212b40; --border:#2e3a54;
+    --text:#e6ebf4; --muted:#9aa7bf; --accent:#4f8ff7; --accent2:#7c5cff;
+    --green:#3ecf8e; --amber:#f5b83d; --radius:12px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{background:var(--bg); color:var(--text); font-family:"Segoe UI",system-ui,sans-serif; line-height:1.55;}
+  .wrap{max-width:1100px; margin:0 auto; padding:24px 20px 80px;}
+  header h1{font-size:1.7rem; font-weight:650;}
+  header p{color:var(--muted); margin-top:4px; font-size:.95rem;}
+  .progress-wrap{margin:18px 0 6px;}
+  .progress-label{display:flex; justify-content:space-between; font-size:.85rem; color:var(--muted); margin-bottom:6px;}
+  .progress-bar{height:10px; background:var(--panel); border-radius:6px; overflow:hidden; border:1px solid var(--border);}
+  .progress-fill{height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--accent2)); transition:width .4s;}
+  nav.tabs{display:flex; flex-wrap:wrap; gap:8px; margin:22px 0;}
+  nav.tabs button{
+    background:var(--panel); color:var(--muted); border:1px solid var(--border); border-radius:20px;
+    padding:8px 16px; cursor:pointer; font-size:.9rem; transition:all .15s;
+  }
+  nav.tabs button:hover{color:var(--text); border-color:var(--accent);}
+  nav.tabs button.active{background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600;}
+  section.tab{display:none;}
+  section.tab.active{display:block; animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;}}
+  .section-intro{color:var(--muted); margin-bottom:16px; font-size:.95rem; max-width:75ch;}
+  h2{font-size:1.25rem; margin-bottom:6px;}
+  h3.sub{font-size:1rem; color:var(--accent); margin:22px 0 10px; text-transform:uppercase; letter-spacing:.06em;}
+  details.card{
+    background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+    margin-bottom:10px; overflow:hidden;
+  }
+  details.card summary{
+    padding:13px 16px; cursor:pointer; font-weight:600; list-style:none; display:flex; align-items:center; gap:10px;
+  }
+  details.card summary::-webkit-details-marker{display:none;}
+  details.card summary::before{content:"▸"; color:var(--accent); transition:transform .15s;}
+  details.card[open] summary::before{transform:rotate(90deg);}
+  details.card .body{padding:0 16px 16px; color:#c9d3e6; font-size:.94rem;}
+  details.card .body p{margin-bottom:10px;}
+  details.card .body code{background:var(--panel2); padding:1px 6px; border-radius:4px; font-size:.88em; color:#a5c8ff;}
+  details.card .body table{border-collapse:collapse; margin:8px 0 12px; width:100%; font-size:.9rem;}
+  details.card .body th, details.card .body td{border:1px solid var(--border); padding:7px 10px; text-align:left;}
+  details.card .body th{background:var(--panel2); color:var(--text);}
+  .tag{font-size:.7rem; background:var(--panel2); color:var(--muted); padding:2px 8px; border-radius:10px; margin-left:auto; font-weight:500;}
+  ul.resources{list-style:none;}
+  ul.resources li{
+    display:flex; align-items:flex-start; gap:10px; background:var(--panel); border:1px solid var(--border);
+    border-radius:var(--radius); padding:12px 14px; margin-bottom:8px;
+  }
+  ul.resources input[type=checkbox]{margin-top:4px; accent-color:var(--green); width:16px; height:16px; cursor:pointer;}
+  ul.resources a{color:var(--accent); text-decoration:none; font-weight:600;}
+  ul.resources a:hover{text-decoration:underline;}
+  ul.resources .desc{color:var(--muted); font-size:.86rem; margin-top:2px;}
+  ul.resources li.done a{color:var(--green);}
+  ul.resources li.done .desc{text-decoration:line-through; opacity:.7;}
+  /* flashcards */
+  .flash-wrap{display:flex; flex-direction:column; align-items:center; gap:14px; margin-top:8px;}
+  .flashcard{
+    width:100%; max-width:560px; min-height:170px; perspective:1000px; cursor:pointer;
+  }
+  .flash-inner{
+    position:relative; width:100%; min-height:170px; transform-style:preserve-3d; transition:transform .5s;
+  }
+  .flashcard.flipped .flash-inner{transform:rotateY(180deg);}
+  .flash-face{
+    position:absolute; inset:0; backface-visibility:hidden; border-radius:var(--radius);
+    display:flex; align-items:center; justify-content:center; text-align:center; padding:22px;
+    border:1px solid var(--border);
+  }
+  .flash-front{background:var(--panel2); font-weight:600; font-size:1.05rem;}
+  .flash-back{background:linear-gradient(135deg,#233457,#2b2350); transform:rotateY(180deg); font-size:.95rem; color:#dbe4f5;}
+  .flash-controls{display:flex; gap:10px;}
+  .flash-controls button{
+    background:var(--panel); border:1px solid var(--border); color:var(--text); border-radius:8px;
+    padding:8px 18px; cursor:pointer; font-size:.9rem;
+  }
+  .flash-controls button:hover{border-color:var(--accent);}
+  .flash-count{color:var(--muted); font-size:.85rem;}
+  .hint{color:var(--muted); font-size:.82rem; font-style:italic;}
+  footer{margin-top:40px; color:var(--muted); font-size:.8rem; text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>🧠 AI Learning Dashboard</h1>
+    <p>Personal knowledge base &amp; roadmap — from ML fundamentals out across the AI umbrella.</p>
+  </header>
+
+  <div class="progress-wrap">
+    <div class="progress-label"><span>Roadmap progress</span><span id="progressText">0 / 0</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button data-tab="ml" class="active">ML Fundamentals</button>
+    <button data-tab="dl">Deep Learning</button>
+    <button data-tab="cv">Computer Vision</button>
+    <button data-tab="nlp">NLP &amp; LLMs</button>
+    <button data-tab="rai">Responsible AI &amp; MLOps</button>
+    <button data-tab="local">Open &amp; Local Models</button>
+    <button data-tab="cards">Flashcards</button>
+  </nav>
+
+  <!-- ============ ML FUNDAMENTALS ============ -->
+  <section class="tab active" id="tab-ml">
+    <h2>Machine Learning Fundamentals</h2>
+    <p class="section-intro">Notes from <a style="color:var(--accent)" href="https://learn.microsoft.com/en-us/training/modules/fundamentals-machine-learning/">Introduction to machine learning concepts</a> (Microsoft Learn) — the foundation everything else builds on.</p>
+
+    <h3 class="sub">Knowledge notes</h3>
+
+    <details class="card" open>
+      <summary>What a machine learning model is <span class="tag">core</span></summary>
+      <div class="body">
+        <p>A model is software that encapsulates a <b>function</b>: it calculates an output from inputs. Defining that function from data is <b>training</b>; using it to predict new values is <b>inferencing</b>.</p>
+        <p>Training data = past observations. The observed attributes are <b>features</b> (<code>x</code>, usually a vector <code>[x1,x2,x3,...]</code>) and the known value you want to predict is the <b>label</b> (<code>y</code>). An algorithm fits the data to find <code>y = f(x)</code>. Predictions from the model are written <code>ŷ</code> ("y-hat") because they're calculated, not observed.</p>
+        <p><i>Example:</i> ice cream sales — weather measurements are <code>x</code>, ice creams sold is <code>y</code>.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Types of machine learning <span class="tag">core</span></summary>
+      <div class="body">
+        <p><b>Supervised learning</b> — training data includes known label values.</p>
+        <table>
+          <tr><th>Type</th><th>Predicts</th><th>Example</th></tr>
+          <tr><td>Regression</td><td>A numeric value</td><td>Ice cream sales from temperature</td></tr>
+          <tr><td>Binary classification</td><td>One of two classes (true/false)</td><td>Diabetes risk: yes/no</td></tr>
+          <tr><td>Multiclass classification</td><td>One of several classes</td><td>Penguin species: Adelie / Gentoo / Chinstrap</td></tr>
+        </table>
+        <p><b>Unsupervised learning</b> — no labels; the model finds structure on its own. Main type: <b>clustering</b>, grouping observations by feature similarity (e.g., segmenting customers).</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Regression &amp; its evaluation metrics</summary>
+      <div class="body">
+        <p>Training is iterative: split data into <b>training</b> and <b>validation</b> sets, fit a function (e.g., linear regression), predict on the held-out set, compare <code>ŷ</code> to actual <code>y</code>, then adjust and repeat.</p>
+        <table>
+          <tr><th>Metric</th><th>Meaning</th></tr>
+          <tr><td>MAE</td><td>Mean absolute error — average size of errors, all weighted equally</td></tr>
+          <tr><td>MSE</td><td>Mean squared error — squaring amplifies larger errors</td></tr>
+          <tr><td>RMSE</td><td>Root of MSE — back in the label's own units</td></tr>
+          <tr><td>R²</td><td>Proportion of variance the model explains (closer to 1 = better)</td></tr>
+        </table>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Binary classification &amp; the confusion matrix</summary>
+      <div class="body">
+        <p>Algorithms (e.g., <b>logistic regression</b>) calculate the <b>probability</b> of the positive class; a threshold (typically 0.5) turns that into a predicted label.</p>
+        <p>Predictions vs. reality form the <b>confusion matrix</b>: true positives (TP), true negatives (TN), false positives (FP), false negatives (FN).</p>
+        <table>
+          <tr><th>Metric</th><th>Formula</th><th>Answers</th></tr>
+          <tr><td>Accuracy</td><td>(TP+TN)/total</td><td>How often is it right overall?</td></tr>
+          <tr><td>Recall (TPR)</td><td>TP/(TP+FN)</td><td>Of actual positives, how many were caught?</td></tr>
+          <tr><td>Precision</td><td>TP/(TP+FP)</td><td>Of predicted positives, how many really were?</td></tr>
+          <tr><td>F1</td><td>2×(P×R)/(P+R)</td><td>Balance of precision &amp; recall</td></tr>
+          <tr><td>AUC</td><td>Area under ROC curve</td><td>How well it separates classes across all thresholds</td></tr>
+        </table>
+        <p><i>Accuracy can mislead on imbalanced data — a model predicting "no diabetes" for everyone can still score high accuracy.</i></p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Multiclass classification</summary>
+      <div class="body">
+        <p>Predicts one of several possible classes. Two common approaches:</p>
+        <p><b>One-vs-Rest (OvR)</b> — train a binary function per class ("Gentoo or not?"), pick the highest score. <b>Multinomial</b> — a single function (e.g., <b>softmax</b>) outputs a probability distribution across all classes, e.g. <code>[0.2, 0.7, 0.1]</code>, which sums to 1.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Clustering (unsupervised)</summary>
+      <div class="body">
+        <p>Groups unlabeled observations by feature similarity. The most common algorithm is <b>k-means</b>: pick k centroids, assign each point to its nearest centroid, move centroids to their cluster's mean, repeat until stable.</p>
+        <p>Evaluation is different without labels — metrics measure cluster separation, e.g. average distance to cluster center and <b>silhouette</b> (−1 to 1; closer to 1 = tight, well-separated clusters).</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Deep learning (the bridge to the next section)</summary>
+      <div class="body">
+        <p>An advanced form of ML using artificial <b>neural networks</b> — layers of neurons, each a function applying a <b>weight</b> (<code>w</code>) to inputs, wrapped in an <b>activation function</b> that decides whether the signal passes on. Many layers = a deeply nested function, hence "deep".</p>
+        <p>Training: feed features forward through layers → compare output <code>ŷ</code> to known <code>y</code> with a <b>loss function</b> → use <b>gradient descent</b> to work out how each weight should change → <b>backpropagate</b> the adjustments → repeat over <b>epochs</b>. Data is processed as matrices, which is why GPUs matter.</p>
+      </div>
+    </details>
+
+    <h3 class="sub">Source module</h3>
+    <ul class="resources">
+      <li><input type="checkbox" data-key="ml-fundamentals" checked disabled title="Completed">
+        <div><a href="https://learn.microsoft.com/en-us/training/modules/fundamentals-machine-learning/">Introduction to machine learning concepts</a>
+        <div class="desc">Completed ✓ — the module these notes come from (11 units, beginner).</div></div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ DEEP LEARNING ============ -->
+  <section class="tab" id="tab-dl">
+    <h2>Deep Learning — and how it differs from classical ML</h2>
+    <p class="section-intro">Your stated goal: understand what makes deep learning distinct. Short version — classical ML fits relatively simple functions to features <i>you</i> define; deep learning stacks layers of neurons that <i>learn</i> the features themselves.</p>
+
+    <h3 class="sub">Knowledge notes</h3>
+
+    <details class="card" open>
+      <summary>Classical ML vs deep learning <span class="tag">key distinction</span></summary>
+      <div class="body">
+        <table>
+          <tr><th></th><th>Classical ML</th><th>Deep Learning</th></tr>
+          <tr><td>Features</td><td>Hand-picked / engineered by humans</td><td>Learned automatically by hidden layers</td></tr>
+          <tr><td>Best data</td><td>Structured / tabular</td><td>Unstructured: images, audio, text</td></tr>
+          <tr><td>Data needs</td><td>Can work with small datasets</td><td>Usually needs large datasets</td></tr>
+          <tr><td>Compute</td><td>Modest (CPU is fine)</td><td>Heavy — GPUs for matrix math</td></tr>
+          <tr><td>Interpretability</td><td>Often explainable (e.g., decision trees)</td><td>Largely a "black box"</td></tr>
+          <tr><td>Examples</td><td>Linear/logistic regression, k-means, decision trees</td><td>CNNs, RNNs, transformers</td></tr>
+        </table>
+        <p>Deep learning is a <i>subset</i> of ML — same goal (<code>y = f(x)</code>), but <code>f</code> is a deeply nested network of weighted functions rather than a single fitted equation.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Anatomy of a neural network</summary>
+      <div class="body">
+        <p><b>Neuron</b>: computes a weighted sum of inputs, passes it through an <b>activation function</b> (e.g., ReLU, sigmoid) that decides whether/how strongly to fire. <b>Layers</b>: input layer (one neuron per feature) → hidden layers → output layer. When every neuron connects to every neuron in the next layer, it's a <b>fully connected network</b>.</p>
+        <p>For classification, the output layer typically uses <b>softmax</b> to produce a probability per class — e.g., <code>[0.2, 0.7, 0.1]</code> means class 1 is most probable.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>How a network learns: loss, gradient descent, backprop</summary>
+      <div class="body">
+        <p>1. Weights start random. 2. Feed training features forward → get <code>ŷ</code>. 3. A <b>loss function</b> quantifies how far <code>ŷ</code> is from the true <code>y</code>. 4. Because the network is one big differentiable function, calculus can determine each weight's influence on the loss — <b>gradient descent</b> nudges each weight downhill. 5. Adjustments are <b>backpropagated</b> through the layers. 6. Repeat over <b>epochs</b> until loss is acceptably low.</p>
+        <p><i>Mental model: a hiker descending a foggy valley by always stepping in the steepest downward direction.</i></p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Architectures to know</summary>
+      <div class="body">
+        <p><b>CNNs</b> (convolutional) — slide learned filters across images to detect edges → shapes → objects; the workhorse of vision. <b>RNNs/LSTMs</b> — process sequences step by step; largely superseded for language. <b>Transformers</b> — use <i>attention</i> to weigh how every part of an input relates to every other part in parallel; power modern LLMs and increasingly vision too.</p>
+      </div>
+    </details>
+
+    <h3 class="sub">Learning roadmap</h3>
+    <ul class="resources">
+      <li><input type="checkbox" data-key="dl-unit8">
+        <div><a href="https://learn.microsoft.com/en-us/training/modules/fundamentals-machine-learning/8-deep-learning">Deep learning unit (re-read)</a>
+        <div class="desc">The DL unit from your fundamentals module — solid recap before going deeper.</div></div>
+      </li>
+      <li><input type="checkbox" data-key="dl-train-evaluate">
+        <div><a href="https://learn.microsoft.com/en-us/training/modules/train-evaluate-deep-learn-models/">Train and evaluate deep learning models</a>
+        <div class="desc">Hands-on: build a CNN with PyTorch or TensorFlow, incl. transfer learning.</div></div>
+      </li>
+      <li><input type="checkbox" data-key="dl-tensorflow-path">
+        <div><a href="https://learn.microsoft.com/en-us/training/paths/tensorflow-fundamentals/">TensorFlow fundamentals (path)</a>
+        <div class="desc">Multi-module path if you want a full framework grounding.</div></div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ COMPUTER VISION ============ -->
+  <section class="tab" id="tab-cv">
+    <h2>Computer Vision</h2>
+    <p class="section-intro">Teaching machines to "see" — built almost entirely on the deep learning concepts in the previous tab.</p>
+
+    <h3 class="sub">Knowledge notes</h3>
+
+    <details class="card" open>
+      <summary>Images are just numbers <span class="tag">core</span></summary>
+      <div class="body">
+        <p>A grayscale image is a 2-D array of pixel intensities (0–255); a color image is three stacked arrays — red, green, blue channels. Every vision technique is math on these arrays. Classic image processing applies <b>filters</b> (small matrices convolved across the image) to blur, sharpen, or detect edges.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>CNNs: learned filters</summary>
+      <div class="body">
+        <p>A convolutional neural network learns its filter values during training instead of using hand-designed ones. Early layers detect edges and textures; deeper layers combine them into shapes and whole objects. Pooling layers shrink the representation to keep computation manageable. The final layers act as an ordinary classifier over the extracted features.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Core vision tasks</summary>
+      <div class="body">
+        <p><b>Classification</b> — what is in this image? <b>Object detection</b> — what and <i>where</i> (bounding boxes)? <b>Semantic segmentation</b> — label every pixel. <b>OCR</b> — read text in images. <b>Facial analysis</b> and <b>image generation</b> (diffusion models) round out the family.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Vision transformers &amp; multimodal models</summary>
+      <div class="body">
+        <p>Transformers treat image patches like words in a sentence and apply attention across them — now rivaling CNNs. <b>Multimodal models</b> (e.g., GPT-4-class, Florence) embed images and text in a shared space, enabling captioning, visual Q&amp;A, and search by description.</p>
+      </div>
+    </details>
+
+    <h3 class="sub">Learning roadmap</h3>
+    <ul class="resources">
+      <li><input type="checkbox" data-key="cv-intro">
+        <div><a href="https://learn.microsoft.com/en-us/training/modules/introduction-computer-vision/">Introduction to computer vision concepts</a>
+        <div class="desc">Images &amp; processing, CNNs, vision transformers, multimodal models, image generation.</div></div>
+      </li>
+      <li><input type="checkbox" data-key="cv-foundry">
+        <div><a href="https://learn.microsoft.com/en-us/training/paths/develop-computer-vision-with-foundry/">Develop computer vision solutions with Microsoft Foundry (path)</a>
+        <div class="desc">Applied follow-up: build image analysis and detection solutions.</div></div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ NLP & LLMs ============ -->
+  <section class="tab" id="tab-nlp">
+    <h2>NLP &amp; Large Language Models</h2>
+    <p class="section-intro">From classic text analysis to the transformer-based LLMs behind generative AI.</p>
+
+    <h3 class="sub">Knowledge notes</h3>
+
+    <details class="card" open>
+      <summary>From text to numbers <span class="tag">core</span></summary>
+      <div class="body">
+        <p>Models can't read — text must become numbers. <b>Tokenization</b> splits text into tokens (words or sub-words); <b>embeddings</b> map each token to a vector where similar meanings sit close together ("dog" near "puppy", far from "carburetor"). Classic NLP tasks: sentiment analysis, entity recognition, translation, summarization.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Transformers &amp; attention</summary>
+      <div class="body">
+        <p>The 2017 transformer architecture replaced sequential RNN processing with <b>self-attention</b>: every token weighs its relevance to every other token simultaneously. In "the animal didn't cross the street because <i>it</i> was tired", attention lets the model link "it" to "animal". This parallelism made training on internet-scale text feasible.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>LLMs, prompts &amp; agents</summary>
+      <div class="body">
+        <p>An <b>LLM</b> is a huge transformer trained to predict the next token, which turns out to require absorbing grammar, facts, and reasoning patterns. <b>Prompts</b> are the input that conditions its output — prompt engineering is shaping that input deliberately. <b>Agents</b> pair an LLM with tools and memory so it can take actions (search, run code, call APIs), not just generate text. <b>RAG</b> (retrieval-augmented generation) grounds answers in your own documents to reduce hallucination.</p>
+      </div>
+    </details>
+
+    <h3 class="sub">Learning roadmap</h3>
+    <ul class="resources">
+      <li><input type="checkbox" data-key="nlp-intro">
+        <div><a href="https://learn.microsoft.com/en-us/training/modules/introduction-language/">Introduction to natural language processing concepts</a>
+        <div class="desc">Text analysis foundations — assumes the ML basics you already have.</div></div>
+      </li>
+      <li><input type="checkbox" data-key="nlp-llm">
+        <div><a href="https://learn.microsoft.com/en-us/training/modules/introduction-large-language-models/">Introduction to large language models</a>
+        <div class="desc">LLM core concepts, model landscape, and when to use them.</div></div>
+      </li>
+      <li><input type="checkbox" data-key="nlp-genai">
+        <div><a href="https://learn.microsoft.com/en-us/training/modules/fundamentals-generative-ai/">Introduction to generative AI and agents</a>
+        <div class="desc">LLMs, prompts, and AI agents — the generative AI umbrella.</div></div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ RESPONSIBLE AI & MLOPS ============ -->
+  <section class="tab" id="tab-rai">
+    <h2>Responsible AI &amp; MLOps</h2>
+    <p class="section-intro">Building AI that's trustworthy — and getting models out of notebooks into reliable production systems.</p>
+
+    <h3 class="sub">Knowledge notes</h3>
+
+    <details class="card" open>
+      <summary>Microsoft's six responsible AI principles <span class="tag">core</span></summary>
+      <div class="body">
+        <table>
+          <tr><th>Principle</th><th>In practice</th></tr>
+          <tr><td>Fairness</td><td>Comparable outcomes across groups; watch for biased training data</td></tr>
+          <tr><td>Reliability &amp; safety</td><td>Rigorous testing; plan for failure modes</td></tr>
+          <tr><td>Privacy &amp; security</td><td>Protect training data and user inputs</td></tr>
+          <tr><td>Inclusiveness</td><td>Work for all users, incl. accessibility needs</td></tr>
+          <tr><td>Transparency</td><td>Users should know they're using AI and understand its limits</td></tr>
+          <tr><td>Accountability</td><td>Humans stay answerable for AI-driven outcomes</td></tr>
+        </table>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>MLOps in a nutshell</summary>
+      <div class="body">
+        <p>DevOps principles applied to the ML lifecycle: version control for data <i>and</i> models, automated training pipelines, CI/CD for deployment, and <b>monitoring for drift</b> — models degrade as real-world data shifts away from what they were trained on, so retraining is a scheduled reality, not an emergency.</p>
+      </div>
+    </details>
+
+    <h3 class="sub">Learning roadmap</h3>
+    <ul class="resources">
+      <li><input type="checkbox" data-key="rai-principles">
+        <div><a href="https://learn.microsoft.com/en-us/training/modules/embrace-responsible-ai-principles-practices/">Embrace responsible AI principles and practices</a>
+        <div class="desc">The six principles with real examples and governance practices.</div></div>
+      </li>
+      <li><input type="checkbox" data-key="rai-mlops">
+        <div><a href="https://learn.microsoft.com/en-us/training/paths/introduction-machine-learn-operations/">Introduction to machine learning operations — MLOps (path)</a>
+        <div class="desc">Scaling ML from experimentation to production with DevOps principles.</div></div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ OPEN & LOCAL MODELS ============ -->
+  <section class="tab" id="tab-local">
+    <h2>Open &amp; Local Models</h2>
+    <p class="section-intro">Running models on your own hardware — privacy, cost control, and a great way to learn by tinkering.</p>
+
+    <h3 class="sub">Knowledge notes</h3>
+
+    <details class="card" open>
+      <summary>Open weights vs closed models <span class="tag">core</span></summary>
+      <div class="body">
+        <p><b>Closed models</b> (GPT-4-class, Claude) are accessed via API only. <b>Open-weight models</b> (Llama, Mistral, Phi, Gemma) publish their weights so anyone can download, run, and fine-tune them. "Open source" is used loosely — check the license: some restrict commercial use.</p>
+        <p><b>SLMs</b> (small language models, roughly 1–14B parameters, e.g. Microsoft's Phi family) trade some capability for the ability to run on a laptop — often plenty for summarization, classification, and coding help.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Running models locally</summary>
+      <div class="body">
+        <p><b>Ollama</b> — the easiest start: <code>ollama run phi3</code> downloads and serves a model with an OpenAI-compatible API on port 11434. <b>Foundry Local</b> — Microsoft's on-device runtime for Windows, optimized for local hardware. <b>LM Studio</b> — GUI alternative.</p>
+        <p><b>Quantization</b> makes this possible: compressing weights from 16-bit floats to 4–8 bits shrinks memory needs dramatically with modest quality loss. Rule of thumb: a 7B model at 4-bit needs ~4–5 GB of RAM/VRAM.</p>
+      </div>
+    </details>
+
+    <h3 class="sub">Learning roadmap</h3>
+    <ul class="resources">
+      <li><input type="checkbox" data-key="local-ollama">
+        <div><a href="https://learn.microsoft.com/en-us/shows/generative-ai-with-javascript/run-ai-models-on-your-local-machine-with-ollama">Run AI models on your local machine with Ollama</a>
+        <div class="desc">Video walkthrough — download, run, and chat with local models.</div></div>
+      </li>
+      <li><input type="checkbox" data-key="local-foundry">
+        <div><a href="https://learn.microsoft.com/en-us/windows/ai/foundry-local/get-started">Get started with Foundry Local</a>
+        <div class="desc">Microsoft's runtime for on-device LLMs on Windows.</div></div>
+      </li>
+      <li><input type="checkbox" data-key="local-windows">
+        <div><a href="https://learn.microsoft.com/en-us/windows/ai/apis/local-llms">Ready-to-use local LLMs on Windows</a>
+        <div class="desc">Windows AI APIs for local model inference.</div></div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- ============ FLASHCARDS ============ -->
+  <section class="tab" id="tab-cards">
+    <h2>Flashcards</h2>
+    <p class="section-intro">Quiz yourself — click a card to flip it. Covers ML fundamentals and deep learning terms.</p>
+    <div class="flash-wrap">
+      <div class="flashcard" id="flashcard">
+        <div class="flash-inner">
+          <div class="flash-face flash-front" id="flashFront"></div>
+          <div class="flash-face flash-back" id="flashBack"></div>
+        </div>
+      </div>
+      <div class="flash-count" id="flashCount"></div>
+      <div class="flash-controls">
+        <button id="flashPrev">← Prev</button>
+        <button id="flashShuffle">🔀 Shuffle</button>
+        <button id="flashNext">Next →</button>
+      </div>
+      <p class="hint">Tip: say the answer out loud before flipping — retrieval practice beats re-reading.</p>
+    </div>
+  </section>
+
+  <footer>Built with Claude · progress is saved in this browser (localStorage) · last updated July 2026</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- Tabs ---------- */
+  var tabButtons = document.querySelectorAll("#tabs button");
+  tabButtons.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      tabButtons.forEach(function(b){ b.classList.remove("active"); });
+      document.querySelectorAll("section.tab").forEach(function(s){ s.classList.remove("active"); });
+      btn.classList.add("active");
+      document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
+      try { localStorage.setItem("aiDash.tab", btn.dataset.tab); } catch(e){}
+    });
+  });
+  try {
+    var savedTab = localStorage.getItem("aiDash.tab");
+    if (savedTab && document.getElementById("tab-" + savedTab)) {
+      document.querySelector('#tabs button[data-tab="' + savedTab + '"]').click();
+    }
+  } catch(e){}
+
+  /* ---------- Progress checkboxes (persisted) ---------- */
+  var boxes = document.querySelectorAll('ul.resources input[type=checkbox]:not([disabled])');
+  var STORE = "aiDash.progress";
+  function loadProgress(){
+    try { return JSON.parse(localStorage.getItem(STORE)) || {}; } catch(e){ return {}; }
+  }
+  function saveProgress(p){
+    try { localStorage.setItem(STORE, JSON.stringify(p)); } catch(e){}
+  }
+  function refreshUI(){
+    var done = 0;
+    boxes.forEach(function(cb){
+      cb.closest("li").classList.toggle("done", cb.checked);
+      if (cb.checked) done++;
+    });
+    var total = boxes.length;
+    document.getElementById("progressText").textContent = done + " / " + total + " modules";
+    document.getElementById("progressFill").style.width = (total ? (100 * done / total) : 0) + "%";
+  }
+  var progress = loadProgress();
+  boxes.forEach(function(cb){
+    cb.checked = !!progress[cb.dataset.key];
+    cb.addEventListener("change", function(){
+      progress[cb.dataset.key] = cb.checked;
+      saveProgress(progress);
+      refreshUI();
+    });
+  });
+  refreshUI();
+
+  /* ---------- Flashcards ---------- */
+  var deck = [
+    ["What's the difference between training and inferencing?", "Training defines the function y = f(x) from past observations; inferencing uses the trained model to predict labels for new data."],
+    ["What are features and labels?", "Features (x) are the observed attributes of a thing; the label (y) is the value you want to predict. Predictions are written ŷ (\"y-hat\")."],
+    ["Supervised vs unsupervised learning?", "Supervised trains on data that includes known label values (regression, classification). Unsupervised finds structure in unlabeled data (clustering)."],
+    ["Regression vs classification?", "Regression predicts a numeric value (ice cream sales); classification predicts a class — binary (yes/no) or multiclass (penguin species)."],
+    ["Name the four main regression metrics.", "MAE (mean absolute error), MSE (squares amplify big errors), RMSE (back in label units), R² (variance explained, closer to 1 is better)."],
+    ["Precision vs recall?", "Precision: of everything predicted positive, how much really was — TP/(TP+FP). Recall: of all actual positives, how many were caught — TP/(TP+FN). F1 balances both."],
+    ["Why can accuracy be misleading?", "With imbalanced classes, always predicting the majority class scores high accuracy while catching zero positives. Check recall, precision, and AUC too."],
+    ["How does k-means clustering work?", "Pick k centroids → assign each point to nearest centroid → move each centroid to its cluster's mean → repeat until stable. Evaluate with silhouette (−1 to 1)."],
+    ["What makes deep learning \"deep\"?", "Multiple layers of neurons form a deeply nested function. Each neuron applies weights to inputs inside an activation function that decides whether the signal passes on."],
+    ["Describe how a neural network learns.", "Random weights → forward pass gives ŷ → loss function measures error vs y → gradient descent computes weight adjustments → backpropagation applies them → repeat over epochs."],
+    ["Classical ML vs deep learning — biggest practical difference?", "Classical ML needs hand-engineered features and suits tabular data; deep learning learns features itself and excels on unstructured data (images, text, audio) but needs more data and compute."],
+    ["What is softmax for?", "It turns the output layer's raw scores into a probability distribution across classes — e.g. [0.2, 0.7, 0.1] — that sums to 1; highest probability wins."],
+    ["What does a CNN's convolution layer do?", "Slides learned filters across an image to detect patterns — edges and textures in early layers, shapes and whole objects deeper in."],
+    ["What is attention in a transformer?", "Each token weighs its relevance to every other token in parallel, letting the model resolve context (like what \"it\" refers to) and enabling large-scale training."],
+    ["What is quantization?", "Compressing model weights to fewer bits (16-bit → 4–8 bit) so large models fit in consumer RAM/VRAM with only modest quality loss — key to running LLMs locally."],
+    ["What is model drift?", "Real-world data shifts away from the training distribution over time, degrading performance — why MLOps includes monitoring and scheduled retraining."]
+  ];
+  var idx = 0;
+  var card = document.getElementById("flashcard");
+  function showCard(){
+    card.classList.remove("flipped");
+    document.getElementById("flashFront").textContent = deck[idx][0];
+    document.getElementById("flashBack").textContent = deck[idx][1];
+    document.getElementById("flashCount").textContent = "Card " + (idx + 1) + " of " + deck.length;
+  }
+  card.addEventListener("click", function(){ card.classList.toggle("flipped"); });
+  document.getElementById("flashNext").addEventListener("click", function(){ idx = (idx + 1) % deck.length; showCard(); });
+  document.getElementById("flashPrev").addEventListener("click", function(){ idx = (idx - 1 + deck.length) % deck.length; showCard(); });
+  document.getElementById("flashShuffle").addEventListener("click", function(){
+    for (var i = deck.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = deck[i]; deck[i] = deck[j]; deck[j] = t;
+    }
+    idx = 0; showCard();
+  });
+  showCard();
+})();
+</script>
+</body>
+</html>
