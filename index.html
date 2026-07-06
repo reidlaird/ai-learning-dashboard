@@ -790,24 +790,39 @@
       <summary><span class="stage" title="Seedling — new note">🌱</span> Where LLMs sit in the AI universe <span class="tag">core</span></summary>
       <div class="body">
         <p>LLMs are the most recognizable AI there is — and a <i>tiny</i> slice of the field. Each ring below contains the next: AI includes techniques that aren't learning at all (rules, search, planning); most machine learning isn't deep; most deep learning isn't a transformer; and an LLM is one transformer application — next-token prediction on text.</p>
-        <svg class="viz" viewBox="0 0 480 330" role="img" aria-label="Nested boxes: AI contains machine learning contains deep learning contains transformers contains LLMs">
+        <svg class="viz" viewBox="0 0 480 356" role="img" aria-label="Territory map: LLMs are a small corner of transformers, which are a corner of deep learning, a corner of machine learning, a corner of AI">
           <rect x="10" y="10" width="460" height="310" rx="14" fill="var(--panel2)" stroke="var(--muted)" stroke-width="1.5"/>
           <text x="26" y="34" fill="var(--text)" font-size="12" font-weight="700">ARTIFICIAL INTELLIGENCE</text>
-          <text x="454" y="34" text-anchor="end" fill="var(--muted)" font-size="9">also: rules, search, planning</text>
-          <rect x="34" y="48" width="412" height="248" rx="12" fill="var(--bg)" stroke="var(--accent)" stroke-width="1.5"/>
-          <text x="50" y="72" fill="var(--accent)" font-size="12" font-weight="700">MACHINE LEARNING</text>
-          <text x="430" y="72" text-anchor="end" fill="var(--muted)" font-size="9">also: regression, k-means, boosting</text>
-          <rect x="58" y="86" width="364" height="186" rx="12" fill="var(--panel2)" stroke="var(--accent2)" stroke-width="1.5"/>
-          <text x="74" y="110" fill="var(--accent2)" font-size="12" font-weight="700">DEEP LEARNING</text>
-          <text x="406" y="110" text-anchor="end" fill="var(--muted)" font-size="9">also: CNNs, GANs, diffusion</text>
-          <rect x="82" y="124" width="316" height="124" rx="12" fill="var(--bg)" stroke="var(--amber)" stroke-width="1.5"/>
-          <text x="98" y="148" fill="var(--amber)" font-size="12" font-weight="700">TRANSFORMERS</text>
-          <text x="382" y="148" text-anchor="end" fill="var(--muted)" font-size="9">also: vision &amp; speech models</text>
-          <rect class="pulse" x="150" y="168" width="180" height="58" rx="29" fill="var(--green)" fill-opacity=".22" stroke="var(--green)" stroke-width="2"/>
-          <text x="240" y="192" text-anchor="middle" fill="var(--text)" font-size="13" font-weight="700">LLMs</text>
-          <text x="240" y="208" text-anchor="middle" fill="var(--muted)" font-size="8.5">next-token prediction on text</text>
+          <text x="26" y="58" fill="var(--muted)" font-size="9">search &amp; planning · rule-based systems · symbolic logic</text>
+          <g fill="var(--muted)" font-size="8.5" text-anchor="middle">
+            <text x="64" y="140">expert</text><text x="64" y="152">systems</text>
+            <text x="64" y="196">knowledge</text><text x="64" y="208">graphs</text>
+            <text x="64" y="256">optimization</text>
+          </g>
+          <rect x="120" y="80" width="342" height="232" rx="12" fill="var(--bg)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="134" y="102" fill="var(--accent)" font-size="12" font-weight="700">MACHINE LEARNING</text>
+          <text x="134" y="122" fill="var(--muted)" font-size="9">regression · k-means · decision trees · gradient boosting</text>
+          <g fill="var(--muted)" font-size="8.5" text-anchor="middle">
+            <text x="164" y="200">SVMs</text>
+            <text x="164" y="240">random</text><text x="164" y="252">forests</text>
+          </g>
+          <rect x="210" y="150" width="244" height="154" rx="10" fill="var(--panel2)" stroke="var(--accent2)" stroke-width="1.5"/>
+          <text x="222" y="170" fill="var(--accent2)" font-size="11.5" font-weight="700">DEEP LEARNING</text>
+          <text x="222" y="188" fill="var(--muted)" font-size="8.5">CNNs · RNNs · GANs · diffusion</text>
+          <g fill="var(--muted)" font-size="8" text-anchor="middle">
+            <text x="248" y="248">LSTMs</text>
+            <text x="248" y="282">auto-</text><text x="248" y="292">encoders</text>
+          </g>
+          <rect x="290" y="212" width="156" height="84" rx="9" fill="var(--bg)" stroke="var(--amber)" stroke-width="1.5"/>
+          <text x="300" y="230" fill="var(--amber)" font-size="10.5" font-weight="700">TRANSFORMERS</text>
+          <text x="300" y="245" fill="var(--muted)" font-size="8">vision transformers</text>
+          <text x="300" y="256" fill="var(--muted)" font-size="8">speech models</text>
+          <rect class="pulse" x="364" y="260" width="74" height="28" rx="14" fill="var(--green)" fill-opacity=".25" stroke="var(--green)" stroke-width="2"/>
+          <text x="401" y="278" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="700">LLMs</text>
+          <path d="M338,342 Q400,336 399,294" fill="none" stroke="var(--green)" stroke-width="1.5" stroke-dasharray="5 4"/>
+          <text x="26" y="346" fill="var(--green)" font-size="10" font-style="italic">that little box in the corner is the entire chatbot phenomenon</text>
         </svg>
-        <p class="viz-caption">Each box contains the next — the chatbot in the news is the innermost pill, not the umbrella.</p>
+        <p class="viz-caption">A territory map, not a bullseye: LLMs are a corner of a corner of a corner — the field keeps going without them.</p>
         <p>Why the smallest circle gets all the attention: LLMs are the first AI you can <i>talk to</i>. No dataset, no training, no interface to learn — natural language in, natural language out, and one model handles a thousand tasks. That generality plus the ChatGPT moment made LLMs the public face of a field that is mostly other things.</p>
         <p class="rel">↳ Related: <a data-jump="c-ml-types">Types of machine learning</a> · <a data-jump="c-archs">Architectures to know</a> · <a data-jump="c-llm-iceberg">The AI you don't see</a></p>
       </div>

@@ -11,7 +11,7 @@ A digital library of curated AI knowledge — distilled notes, visual explainers
 | ML Fundamentals | Distilled notes from [Introduction to machine learning concepts](https://learn.microsoft.com/en-us/training/modules/fundamentals-machine-learning/) (Microsoft Learn) — models, training vs inference, regression, classification, clustering, overfitting & validation |
 | Deep Learning | Classical ML vs DL pipelines, neural net anatomy, activation functions, animated gradient descent, key architectures |
 | Computer Vision | Images as numbers (pixel grid), animated convolution filter, vision tasks side-by-side, transformers & multimodal models |
-| NLP & LLMs | Where LLMs sit in the AI umbrella (nested-rings diagram), the AI-you-don't-see iceberg, tokenization→embedding pipeline, tokens up close (text vs code vs numbers), the animated token-by-token inference loop, attention visual, context windows, hallucination & grounding |
+| NLP & LLMs | Where LLMs sit in the AI umbrella (territory-map diagram), the AI-you-don't-see iceberg, tokenization→embedding pipeline, tokens up close (text vs code vs numbers), the animated token-by-token inference loop, attention visual, context windows, hallucination & grounding |
 | Speech & Docs | Speech recognition & synthesis pipelines (animated), prosody, OCR, information extraction from documents |
 | Agents & RAG | Animated agent loop, full RAG pipeline diagram, how coding agents spend tokens (context-budget visual), embeddings & vector search, the prompt→RAG→fine-tune sequence |
 | Prompting & Fine-tuning | Prompt anatomy diagram, temperature & sampling visual, LoRA & distillation |
