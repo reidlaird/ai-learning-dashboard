@@ -790,23 +790,24 @@
       <summary><span class="stage" title="Seedling — new note">🌱</span> Where LLMs sit in the AI universe <span class="tag">core</span></summary>
       <div class="body">
         <p>LLMs are the most recognizable AI there is — and a <i>tiny</i> slice of the field. Each ring below contains the next: AI includes techniques that aren't learning at all (rules, search, planning); most machine learning isn't deep; most deep learning isn't a transformer; and an LLM is one transformer application — next-token prediction on text.</p>
-        <svg class="viz" viewBox="0 0 480 345" role="img" aria-label="Nested circles: AI contains machine learning contains deep learning contains transformers contains LLMs">
-          <circle cx="240" cy="172" r="155" fill="var(--panel2)" stroke="var(--muted)" stroke-width="1.5"/>
-          <circle cx="240" cy="185" r="122" fill="var(--bg)" stroke="var(--accent)" stroke-width="1.5"/>
-          <circle cx="240" cy="198" r="90" fill="var(--panel2)" stroke="var(--accent2)" stroke-width="1.5"/>
-          <circle cx="240" cy="211" r="58" fill="var(--bg)" stroke="var(--amber)" stroke-width="1.5"/>
-          <circle class="pulse" cx="240" cy="224" r="26" fill="var(--green)" fill-opacity=".25" stroke="var(--green)" stroke-width="2"/>
-          <text x="240" y="38" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="700">ARTIFICIAL INTELLIGENCE</text>
-          <text x="240" y="52" text-anchor="middle" fill="var(--muted)" font-size="9">also: rules, search, planning, symbolic logic</text>
-          <text x="240" y="84" text-anchor="middle" fill="var(--accent)" font-size="12" font-weight="700">MACHINE LEARNING</text>
-          <text x="240" y="98" text-anchor="middle" fill="var(--muted)" font-size="9">also: regression, k-means, gradient boosting</text>
-          <text x="240" y="129" text-anchor="middle" fill="var(--accent2)" font-size="12" font-weight="700">DEEP LEARNING</text>
-          <text x="240" y="143" text-anchor="middle" fill="var(--muted)" font-size="9">also: CNNs, RNNs, GANs, diffusion</text>
-          <text x="240" y="174" text-anchor="middle" fill="var(--amber)" font-size="12" font-weight="700">TRANSFORMERS</text>
-          <text x="240" y="188" text-anchor="middle" fill="var(--muted)" font-size="9">also: vision &amp; speech transformers</text>
-          <text x="240" y="228" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="700">LLMs</text>
+        <svg class="viz" viewBox="0 0 480 330" role="img" aria-label="Nested boxes: AI contains machine learning contains deep learning contains transformers contains LLMs">
+          <rect x="10" y="10" width="460" height="310" rx="14" fill="var(--panel2)" stroke="var(--muted)" stroke-width="1.5"/>
+          <text x="26" y="34" fill="var(--text)" font-size="12" font-weight="700">ARTIFICIAL INTELLIGENCE</text>
+          <text x="454" y="34" text-anchor="end" fill="var(--muted)" font-size="9">also: rules, search, planning</text>
+          <rect x="34" y="48" width="412" height="248" rx="12" fill="var(--bg)" stroke="var(--accent)" stroke-width="1.5"/>
+          <text x="50" y="72" fill="var(--accent)" font-size="12" font-weight="700">MACHINE LEARNING</text>
+          <text x="430" y="72" text-anchor="end" fill="var(--muted)" font-size="9">also: regression, k-means, boosting</text>
+          <rect x="58" y="86" width="364" height="186" rx="12" fill="var(--panel2)" stroke="var(--accent2)" stroke-width="1.5"/>
+          <text x="74" y="110" fill="var(--accent2)" font-size="12" font-weight="700">DEEP LEARNING</text>
+          <text x="406" y="110" text-anchor="end" fill="var(--muted)" font-size="9">also: CNNs, GANs, diffusion</text>
+          <rect x="82" y="124" width="316" height="124" rx="12" fill="var(--bg)" stroke="var(--amber)" stroke-width="1.5"/>
+          <text x="98" y="148" fill="var(--amber)" font-size="12" font-weight="700">TRANSFORMERS</text>
+          <text x="382" y="148" text-anchor="end" fill="var(--muted)" font-size="9">also: vision &amp; speech models</text>
+          <rect class="pulse" x="150" y="168" width="180" height="58" rx="29" fill="var(--green)" fill-opacity=".22" stroke="var(--green)" stroke-width="2"/>
+          <text x="240" y="192" text-anchor="middle" fill="var(--text)" font-size="13" font-weight="700">LLMs</text>
+          <text x="240" y="208" text-anchor="middle" fill="var(--muted)" font-size="8.5">next-token prediction on text</text>
         </svg>
-        <p class="viz-caption">Five rings deep: the chatbot in the news is the innermost dot, not the umbrella.</p>
+        <p class="viz-caption">Each box contains the next — the chatbot in the news is the innermost pill, not the umbrella.</p>
         <p>Why the smallest circle gets all the attention: LLMs are the first AI you can <i>talk to</i>. No dataset, no training, no interface to learn — natural language in, natural language out, and one model handles a thousand tasks. That generality plus the ChatGPT moment made LLMs the public face of a field that is mostly other things.</p>
         <p class="rel">↳ Related: <a data-jump="c-ml-types">Types of machine learning</a> · <a data-jump="c-archs">Architectures to know</a> · <a data-jump="c-llm-iceberg">The AI you don't see</a></p>
       </div>
