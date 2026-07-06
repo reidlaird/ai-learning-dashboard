@@ -218,6 +218,7 @@
     <button data-tab="dl">Deep Learning</button>
     <button data-tab="cv">Computer Vision</button>
     <button data-tab="nlp">NLP &amp; LLMs</button>
+    <button data-tab="speech">Speech &amp; Docs</button>
     <button data-tab="agents">Agents &amp; RAG</button>
     <button data-tab="prompt">Prompting &amp; Fine-tuning</button>
     <button data-tab="rl">Reinforcement Learning</button>
@@ -837,6 +838,146 @@
     </ul>
   </section>
 
+  <!-- ============ SPEECH & DOCUMENT INTELLIGENCE ============ -->
+  <section class="tab" id="tab-speech">
+    <h2>Speech &amp; Document Intelligence</h2>
+    <p class="section-intro">Two more AI workloads from the concepts path: teaching machines to hear and talk, and to turn messy documents into clean data. Both are pipelines of the building blocks you already know — transformers, CNNs, and language models.</p>
+
+    <h3 class="sub">Knowledge notes</h3>
+
+    <details class="card" id="c-stt" open>
+      <summary><span class="stage" title="Seedling — new note">🌱</span> Speech recognition: sound → text <span class="tag">core</span></summary>
+      <div class="body">
+        <p>Speech-to-text is a six-stage pipeline. A microphone samples audio ~16,000 times per second; <b>feature extraction</b> (MFCC) compresses each 20–30 ms frame into ~13 numbers that mimic how the human ear hears; a transformer <b>acoustic model</b> predicts <b>phonemes</b> — the smallest sound units that distinguish words (English has ~44; "cat" = /k/ + /æ/ + /t/).</p>
+        <svg class="viz" style="max-width:520px" viewBox="0 0 540 210" role="img" aria-label="Speech recognition pipeline from waveform to text">
+          <rect x="10" y="25" width="120" height="46" rx="8" fill="var(--panel2)" stroke="var(--accent)"/>
+          <polyline points="22,48 30,38 38,58 46,33 54,62 62,42 70,55 78,40 86,52 94,44 102,50 110,46 118,48" fill="none" stroke="var(--accent)" stroke-width="2"/>
+          <text x="70" y="86" text-anchor="middle" fill="var(--muted)" font-size="10">1 · audio, 16 kHz</text>
+          <line class="flow" x1="134" y1="48" x2="176" y2="48" stroke="var(--muted)" stroke-width="2"/>
+          <rect x="180" y="25" width="120" height="46" rx="8" fill="var(--panel2)" stroke="var(--accent)"/>
+          <g fill="var(--accent2)">
+            <rect x="196" y="52" width="8" height="12"/><rect x="208" y="42" width="8" height="22"/>
+            <rect x="220" y="47" width="8" height="17"/><rect x="232" y="36" width="8" height="28"/>
+            <rect x="244" y="49" width="8" height="15"/><rect x="256" y="41" width="8" height="23"/>
+            <rect x="268" y="55" width="8" height="9"/><rect x="280" y="45" width="8" height="19"/>
+          </g>
+          <text x="240" y="86" text-anchor="middle" fill="var(--muted)" font-size="10">2 · features (MFCC)</text>
+          <line class="flow" x1="304" y1="48" x2="346" y2="48" stroke="var(--muted)" stroke-width="2"/>
+          <rect x="350" y="25" width="120" height="46" rx="8" fill="var(--panel2)" stroke="var(--accent)"/>
+          <text x="410" y="53" text-anchor="middle" fill="var(--code)" font-size="13" font-family="Consolas,monospace">/k/ /æ/ /t/</text>
+          <text x="410" y="86" text-anchor="middle" fill="var(--muted)" font-size="10">3 · acoustic model → phonemes</text>
+          <path class="flow" d="M470,71 Q510,100 470,132" fill="none" stroke="var(--muted)" stroke-width="2"/>
+          <rect x="350" y="130" width="120" height="46" rx="8" fill="var(--panel2)" stroke="var(--amber)"/>
+          <text x="410" y="150" text-anchor="middle" fill="var(--text)" font-size="11">"their" or "there"?</text>
+          <text x="410" y="164" text-anchor="middle" fill="var(--muted)" font-size="9">grammar + word patterns</text>
+          <text x="410" y="192" text-anchor="middle" fill="var(--muted)" font-size="10">4 · language model</text>
+          <line class="flow" x1="346" y1="153" x2="304" y2="153" stroke="var(--muted)" stroke-width="2"/>
+          <rect x="180" y="130" width="120" height="46" rx="8" fill="var(--panel2)" stroke="var(--amber)"/>
+          <text x="240" y="158" text-anchor="middle" fill="var(--text)" font-size="11">best word sequence</text>
+          <text x="240" y="192" text-anchor="middle" fill="var(--muted)" font-size="10">5 · beam-search decoding</text>
+          <line class="flow" x1="176" y1="153" x2="134" y2="153" stroke="var(--muted)" stroke-width="2"/>
+          <rect x="10" y="130" width="120" height="46" rx="8" fill="var(--panel2)" stroke="var(--green)" stroke-width="2"/>
+          <text x="70" y="158" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="600">“Hi, I’m Sam.”</text>
+          <text x="70" y="192" text-anchor="middle" fill="var(--muted)" font-size="10">6 · caps, punctuation, “3 PM”</text>
+        </svg>
+        <p class="viz-caption">Each stage narrows ambiguity: the acoustic model hears sounds, the language model knows which words make sense.</p>
+        <p>The <b>language model</b> resolves what sound alone can't ("their" vs "there"); <b>beam-search decoding</b> keeps a shortlist of candidate sentences and picks the best; <b>post-processing</b> adds capitalization, punctuation, and formats "three p m" → "3 PM". Accuracy problems usually trace to one stage — noisy capture, weak domain vocabulary, or aggressive cleanup.</p>
+        <p class="rel">↳ Related: <a data-jump="c-attention">Transformers &amp; attention</a> · <a data-jump="c-tts">Speech synthesis</a></p>
+      </div>
+    </details>
+
+    <details class="card" id="c-tts">
+      <summary><span class="stage" title="Seedling — new note">🌱</span> Speech synthesis: text → sound</summary>
+      <div class="body">
+        <p>Text-to-speech runs the pipeline in reverse, in four stages. <b>Normalization</b> expands text into speakable words ("Dr. Chen at 3:00 PM" → "Doctor Chen at three o'clock P M"). <b>Linguistic analysis</b> maps letters to phonemes — hard because spelling lies: <i>though</i>, <i>through</i>, and <i>cough</i> share "ough" and share no pronunciation.</p>
+        <svg class="viz" style="max-width:520px" viewBox="0 0 540 150" role="img" aria-label="Text to speech pipeline with four stages">
+          <rect x="10" y="35" width="110" height="44" rx="8" fill="var(--panel2)" stroke="var(--accent)"/>
+          <text x="65" y="55" text-anchor="middle" fill="var(--text)" font-size="10">“Dr. Chen, 3 PM”</text>
+          <text x="65" y="69" text-anchor="middle" fill="var(--muted)" font-size="9">normalize →“Doctor…”</text>
+          <line class="flow" x1="124" y1="57" x2="152" y2="57" stroke="var(--muted)" stroke-width="2"/>
+          <rect x="156" y="35" width="100" height="44" rx="8" fill="var(--panel2)" stroke="var(--accent)"/>
+          <text x="206" y="55" text-anchor="middle" fill="var(--code)" font-size="10" font-family="Consolas,monospace">/tʃɛn/</text>
+          <text x="206" y="69" text-anchor="middle" fill="var(--muted)" font-size="9">letters → phonemes</text>
+          <line class="flow" x1="260" y1="57" x2="288" y2="57" stroke="var(--muted)" stroke-width="2"/>
+          <rect x="292" y="35" width="110" height="44" rx="8" fill="var(--panel2)" stroke="var(--amber)"/>
+          <path d="M304,68 Q322,48 340,60 Q358,72 372,44" fill="none" stroke="var(--amber)" stroke-width="2"/>
+          <text x="347" y="92" text-anchor="middle" fill="var(--muted)" font-size="9">prosody: pitch·pauses·stress</text>
+          <line class="flow" x1="406" y1="57" x2="434" y2="57" stroke="var(--muted)" stroke-width="2"/>
+          <rect x="438" y="35" width="92" height="44" rx="8" fill="var(--panel2)" stroke="var(--green)" stroke-width="2"/>
+          <polyline points="448,57 454,49 460,64 466,45 472,66 478,50 484,60 490,53 496,58" fill="none" stroke="var(--green)" stroke-width="2"/>
+          <text x="484" y="92" text-anchor="middle" fill="var(--muted)" font-size="9">neural vocoder → 🔊</text>
+          <text x="270" y="128" text-anchor="middle" fill="var(--muted)" font-size="10" font-style="italic">the vocoder is speech recognition in reverse: linguistic representation → waveform</text>
+        </svg>
+        <p><b>Prosody</b> — rhythm, stress, intonation — is what separates natural from robotic. Meaning shifts entirely with emphasis: "<i>I</i> never said he ate the cake" vs "I never said he ate the <i>cake</i>". A transformer predicts pitch, duration, and pauses; a <b>neural vocoder</b> (WaveNet, HiFi-GAN) then generates the actual waveform. Robotic TTS is almost always a prosody failure, not a pronunciation one.</p>
+        <p>Combine both directions and you get talking agents: <b>STT → LLM → TTS</b> is the loop inside every voice assistant.</p>
+        <p class="rel">↳ Related: <a data-jump="c-agents">What makes an LLM an agent</a></p>
+      </div>
+    </details>
+
+    <details class="card" id="c-infoext">
+      <summary><span class="stage" title="Seedling — new note">🌱</span> Information extraction: documents → data <span class="tag">core</span></summary>
+      <div class="body">
+        <p>Turning receipts, invoices, and forms into structured data is a two-phase workload: <b>OCR</b> answers <i>what text exists</i>; <b>field extraction</b> answers <i>what it means</i> — and position matters as much as content ("12345" could be an invoice number or a phone number depending on where it sits).</p>
+        <svg class="viz" style="max-width:520px" viewBox="0 0 540 190" role="img" aria-label="Receipt through OCR and field extraction into structured fields">
+          <rect x="15" y="20" width="120" height="150" rx="6" fill="var(--panel2)" stroke="var(--border)"/>
+          <text x="75" y="44" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="700">Fourth Coffee</text>
+          <line x1="30" y1="56" x2="120" y2="56" stroke="var(--border)"/>
+          <text x="32" y="74" fill="var(--muted)" font-size="9">2× latte ........ 5.98</text>
+          <text x="32" y="90" fill="var(--muted)" font-size="9">1× muffin ...... 0.50</text>
+          <text x="32" y="106" fill="var(--muted)" font-size="9">tax ................ 0.49</text>
+          <text x="32" y="126" fill="var(--text)" font-size="10" font-weight="700">TOTAL       6.97</text>
+          <text x="75" y="150" text-anchor="middle" fill="var(--muted)" font-size="8">2024-08-15</text>
+          <line class="flow" x1="142" y1="95" x2="196" y2="95" stroke="var(--muted)" stroke-width="2"/>
+          <text x="169" y="82" text-anchor="middle" fill="var(--muted)" font-size="9">OCR</text>
+          <rect x="200" y="45" width="120" height="100" rx="8" fill="var(--panel2)" stroke="var(--accent)"/>
+          <text x="260" y="65" text-anchor="middle" fill="var(--text)" font-size="10" font-weight="600">raw text + positions</text>
+          <text x="212" y="84" fill="var(--code)" font-size="8" font-family="Consolas,monospace">"Fourth Coffee" (x,y)</text>
+          <text x="212" y="99" fill="var(--code)" font-size="8" font-family="Consolas,monospace">"TOTAL 6.97" (x,y)</text>
+          <text x="212" y="114" fill="var(--code)" font-size="8" font-family="Consolas,monospace">"2024-08-15" (x,y)</text>
+          <text x="212" y="129" fill="var(--code)" font-size="8" font-family="Consolas,monospace">+ confidence scores</text>
+          <line class="flow" x1="324" y1="95" x2="378" y2="95" stroke="var(--muted)" stroke-width="2"/>
+          <text x="351" y="82" text-anchor="middle" fill="var(--muted)" font-size="9">field extraction</text>
+          <g>
+            <rect x="382" y="38" width="148" height="30" rx="8" fill="var(--panel2)" stroke="var(--green)"/>
+            <text x="390" y="57" fill="var(--text)" font-size="10"><tspan font-weight="700" fill="var(--green)">Vendor:</tspan> Fourth Coffee</text>
+            <rect x="382" y="76" width="148" height="30" rx="8" fill="var(--panel2)" stroke="var(--green)"/>
+            <text x="390" y="95" fill="var(--text)" font-size="10"><tspan font-weight="700" fill="var(--green)">Date:</tspan> 2024-08-15</text>
+            <rect x="382" y="114" width="148" height="30" rx="8" fill="var(--panel2)" stroke="var(--green)" stroke-width="2"/>
+            <text x="390" y="133" fill="var(--text)" font-size="10"><tspan font-weight="700" fill="var(--green)">Total:</tspan> $6.97</text>
+          </g>
+          <text x="270" y="178" text-anchor="middle" fill="var(--muted)" font-size="10" font-style="italic">OCR says what the text is; field extraction says what it means</text>
+        </svg>
+        <p>Three approaches to the mapping, in rising flexibility: <b>templates</b> (rules + known layouts — fast and explainable, brittle to variation), <b>trained ML models</b> (transformers/graph networks that learn label–value relationships from example documents), and the 2026 favorite: <b>LLM schema-based extraction</b> — hand the model the document text plus a field schema and let it do the mapping. Validation matters at every step: cross-field checks (do line items sum to the total?) catch what confidence scores miss.</p>
+        <p class="rel">↳ Related: <a data-jump="c-ocr">Inside OCR</a> · <a data-jump="c-seq">The 2026 build sequence</a></p>
+      </div>
+    </details>
+
+    <details class="card" id="c-ocr">
+      <summary><span class="stage" title="Seedling — new note">🌱</span> Inside OCR</summary>
+      <div class="body">
+        <p>OCR is itself a five-stage pipeline: <b>acquisition</b> (scan, photo, PDF page — quality here caps everything downstream), <b>preprocessing</b> (denoise, fix contrast, deskew rotated scans), <b>text region detection</b> (layout analysis separates text from images and tables, then establishes reading order), <b>character recognition</b> (CNNs classify each character; a language model and dictionary correct "rn" → "m" style confusions in context), and <b>post-processing</b> (assemble words, preserve structure, record each element's coordinates).</p>
+        <p>Those coordinates are why OCR output feeds field extraction so well — every string arrives with its position and a confidence score attached. Low-confidence spans get flagged for human review in critical workflows.</p>
+        <p class="rel">↳ Related: <a data-jump="c-images">Images are just numbers</a> · <a data-jump="c-cnn">CNNs: learned filters</a></p>
+      </div>
+    </details>
+
+    <h3 class="sub">Curated resources</h3>
+    <ul class="resources">
+      <li>
+        <div><a href="https://learn.microsoft.com/en-us/training/modules/introduction-ai-speech/">Introduction to AI speech concepts</a>
+        <div class="desc">Speech recognition and synthesis pipelines in depth (7 units, beginner).</div></div>
+      </li>
+      <li>
+        <div><a href="https://learn.microsoft.com/en-us/training/modules/introduction-information-extraction/">Introduction to AI-powered information extraction concepts</a>
+        <div class="desc">OCR and field extraction, from pixels to business data (7 units, beginner).</div></div>
+      </li>
+      <li>
+        <div><a href="https://learn.microsoft.com/en-us/training/paths/ai-concepts/">AI concepts for developers and technology professionals (path)</a>
+        <div class="desc">The 6-module umbrella path these notes came from — generative AI, NLP, speech, vision, information extraction.</div></div>
+      </li>
+    </ul>
+  </section>
+
   <!-- ============ RESPONSIBLE AI & MLOPS ============ -->
   <section class="tab" id="tab-rai">
     <h2>Responsible AI &amp; MLOps</h2>
@@ -1270,6 +1411,7 @@
       <div class="g-item"><dt>Grounding</dt><dd>— supplying source material (via RAG) so answers cite real data instead of guessing.</dd></div>
       <div class="g-item"><dt>Hallucination</dt><dd>— a fluent but false model output; mitigated by grounding (RAG).</dd></div>
       <div class="g-item"><dt>Inference</dt><dd>— using a trained model to make predictions on new data.</dd></div>
+      <div class="g-item"><dt>Information extraction</dt><dd>— turning documents into structured data: OCR finds the text, field extraction maps it to labeled fields.</dd></div>
       <div class="g-item"><dt>Label (y)</dt><dd>— the known value a supervised model learns to predict.</dd></div>
       <div class="g-item"><dt>LLM</dt><dd>— large language model; a transformer trained to predict the next token at internet scale.</dd></div>
       <div class="g-item"><dt>LoRA / QLoRA</dt><dd>— low-rank adapters; cheap fine-tuning that trains a thin layer instead of all weights.</dd></div>
@@ -1277,11 +1419,14 @@
       <div class="g-item"><dt>MCP</dt><dd>— Model Context Protocol; a standard for connecting models to tools and data.</dd></div>
       <div class="g-item"><dt>Multimodal</dt><dd>— models that handle multiple input types — text, images, audio — in one shared space.</dd></div>
       <div class="g-item"><dt>Neural network</dt><dd>— layers of weighted functions (neurons) forming one deeply nested trainable function.</dd></div>
+      <div class="g-item"><dt>OCR</dt><dd>— optical character recognition; converts text in images into editable, searchable text with positions and confidence scores.</dd></div>
       <div class="g-item"><dt>Overfitting</dt><dd>— memorizing training data instead of generalizing; caught via the validation set.</dd></div>
+      <div class="g-item"><dt>Phoneme</dt><dd>— the smallest unit of sound that distinguishes words; English has ~44 ("cat" = /k/+/æ/+/t/).</dd></div>
       <div class="g-item"><dt>Policy</dt><dd>— in RL, the agent's mapping from states to actions.</dd></div>
       <div class="g-item"><dt>Pooling</dt><dd>— CNN layer that downsamples feature maps, keeping the strongest signals and reducing computation.</dd></div>
       <div class="g-item"><dt>Precision</dt><dd>— of predicted positives, the share that really were positive: TP/(TP+FP).</dd></div>
       <div class="g-item"><dt>Prompt engineering</dt><dd>— deliberately shaping model input (system message, examples, parameters) to improve output.</dd></div>
+      <div class="g-item"><dt>Prosody</dt><dd>— rhythm, stress, and intonation of speech; the difference between natural and robotic synthesis.</dd></div>
       <div class="g-item"><dt>Quantization</dt><dd>— compressing weights to fewer bits so big models fit consumer hardware.</dd></div>
       <div class="g-item"><dt>RAG</dt><dd>— retrieval-augmented generation; retrieving your documents into the prompt to ground answers.</dd></div>
       <div class="g-item"><dt>Recall</dt><dd>— of actual positives, the share the model caught: TP/(TP+FN).</dd></div>
@@ -1292,6 +1437,8 @@
       <div class="g-item"><dt>RLHF</dt><dd>— reinforcement learning from human feedback; the step that turns raw LLMs into helpful assistants.</dd></div>
       <div class="g-item"><dt>SLM</dt><dd>— small language model (~1–14B parameters) that can run on a laptop.</dd></div>
       <div class="g-item"><dt>Softmax</dt><dd>— turns raw scores into a probability distribution that sums to 1.</dd></div>
+      <div class="g-item"><dt>Speech recognition (STT)</dt><dd>— converting audio to text: features → phonemes → language model → decoded sentence.</dd></div>
+      <div class="g-item"><dt>Speech synthesis (TTS)</dt><dd>— converting text to audio: normalize → phonemes → prosody → neural vocoder.</dd></div>
       <div class="g-item"><dt>Supervised learning</dt><dd>— training on data with known labels.</dd></div>
       <div class="g-item"><dt>Temperature</dt><dd>— sampling parameter controlling output randomness.</dd></div>
       <div class="g-item"><dt>Token</dt><dd>— the unit models read: a word or sub-word chunk.</dd></div>
@@ -1467,7 +1614,12 @@
     ["What is a context window?", "The maximum tokens a model can attend to at once — its working memory. Anything outside it is invisible, which is why long documents get chunked and retrieved via RAG."],
     ["Why do LLMs hallucinate?", "They're trained to predict plausible next tokens, not verified ones — fluency without a fact-checker. Grounding (RAG), citations, and lower temperature reduce it but never eliminate it."],
     ["What does pooling do in a CNN?", "Downsamples feature maps (max-pooling keeps the strongest signal per patch), shrinking computation and making detection less sensitive to exact pixel position."],
-    ["Low vs high temperature?", "Temperature reshapes next-token probabilities before sampling: low sharpens toward the favorite (consistent, factual), high flattens the distribution (varied, creative). Near 0 ≈ deterministic."]
+    ["Low vs high temperature?", "Temperature reshapes next-token probabilities before sampling: low sharpens toward the favorite (consistent, factual), high flattens the distribution (varied, creative). Near 0 ≈ deterministic."],
+    ["What are the stages of speech recognition?", "Capture audio (~16 kHz) → extract features (MFCC) → acoustic model predicts phonemes → language model applies word knowledge → beam-search decoding picks the best sentence → post-processing adds caps, punctuation, formatting."],
+    ["What is a phoneme?", "The smallest unit of sound that distinguishes words — English has ~44; \"cat\" is /k/+/æ/+/t/. Acoustic models predict phonemes; language models turn them into words."],
+    ["Why does synthesized speech sound robotic?", "Usually flat prosody — rhythm, stress, intonation — not bad phonemes. Modern TTS uses a transformer to predict pitch, pauses, and emphasis, then a neural vocoder generates the waveform."],
+    ["OCR vs field extraction?", "OCR tells you WHAT text exists in an image (with positions and confidence); field extraction tells you what it MEANS — mapping \"Fourth Coffee\" to Vendor and \"6.97\" to Total."],
+    ["Three approaches to field extraction?", "Templates (rules + fixed layouts: fast, brittle), trained ML models (learn label–value relationships across varied layouts), and LLM schema-based extraction (give the model the document text plus a field schema)."]
   ];
   var SR_KEY = "aiDash.sr";
   var DAY = 86400000;
