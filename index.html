@@ -798,6 +798,46 @@
           <text x="470" y="108" fill="var(--muted)" font-size="10">space</text>
         </svg>
         <p class="viz-caption">Every model input makes this trip: text → tokens → vectors. Everything downstream is math on the vectors.</p>
+        <p class="rel">↳ Related: <a data-jump="c-tokens">Tokens, up close</a></p>
+      </div>
+    </details>
+
+    <details class="card" id="c-tokens">
+      <summary><span class="stage" title="Seedling — new note">🌱</span> Tokens, up close <span class="tag">core</span></summary>
+      <div class="body">
+        <p>A tokenizer learns (via <b>byte-pair encoding</b>) which character chunks appear most often, then splits everything into those chunks. Common words get one token; rare words get several; code and numbers split along their own seams:</p>
+        <svg class="viz" style="max-width:520px" viewBox="0 0 540 190" role="img" aria-label="How English text, code, and numbers split into tokens">
+          <text x="12" y="45" fill="var(--muted)" font-size="10" font-weight="600">ENGLISH</text>
+          <g font-family="Consolas,monospace" font-size="11">
+            <rect x="78" y="28" width="34" height="24" rx="6" fill="var(--panel2)" stroke="var(--accent)"/><text x="95" y="44" text-anchor="middle" fill="var(--code)">The</text>
+            <rect x="116" y="28" width="30" height="24" rx="6" fill="var(--panel2)" stroke="var(--amber)"/><text x="131" y="44" text-anchor="middle" fill="var(--code)">un</text>
+            <rect x="150" y="28" width="52" height="24" rx="6" fill="var(--panel2)" stroke="var(--green)"/><text x="176" y="44" text-anchor="middle" fill="var(--code)">believ</text>
+            <rect x="206" y="28" width="40" height="24" rx="6" fill="var(--panel2)" stroke="var(--accent2)"/><text x="226" y="44" text-anchor="middle" fill="var(--code)">ably</text>
+            <rect x="250" y="28" width="48" height="24" rx="6" fill="var(--panel2)" stroke="var(--accent)"/><text x="274" y="44" text-anchor="middle" fill="var(--code)">quick</text>
+            <rect x="302" y="28" width="36" height="24" rx="6" fill="var(--panel2)" stroke="var(--amber)"/><text x="320" y="44" text-anchor="middle" fill="var(--code)">fox</text>
+          </g>
+          <text x="352" y="44" fill="var(--muted)" font-size="10">= 6 tokens, 26 chars</text>
+          <text x="12" y="105" fill="var(--muted)" font-size="10" font-weight="600">CODE</text>
+          <g font-family="Consolas,monospace" font-size="11">
+            <rect x="78" y="88" width="34" height="24" rx="6" fill="var(--panel2)" stroke="var(--accent)"/><text x="95" y="104" text-anchor="middle" fill="var(--code)">def</text>
+            <rect x="116" y="88" width="36" height="24" rx="6" fill="var(--panel2)" stroke="var(--amber)"/><text x="134" y="104" text-anchor="middle" fill="var(--code)">get</text>
+            <rect x="156" y="88" width="46" height="24" rx="6" fill="var(--panel2)" stroke="var(--green)"/><text x="179" y="104" text-anchor="middle" fill="var(--code)">_user</text>
+            <rect x="206" y="88" width="46" height="24" rx="6" fill="var(--panel2)" stroke="var(--accent2)"/><text x="229" y="104" text-anchor="middle" fill="var(--code)">_name</text>
+            <rect x="256" y="88" width="36" height="24" rx="6" fill="var(--panel2)" stroke="var(--accent)"/><text x="274" y="104" text-anchor="middle" fill="var(--code)">():</text>
+          </g>
+          <text x="306" y="104" fill="var(--muted)" font-size="10">= 5 tokens — identifiers split at _ and case</text>
+          <text x="12" y="165" fill="var(--muted)" font-size="10" font-weight="600">NUMBERS</text>
+          <g font-family="Consolas,monospace" font-size="11">
+            <rect x="78" y="148" width="34" height="24" rx="6" fill="var(--panel2)" stroke="var(--accent)"/><text x="95" y="164" text-anchor="middle" fill="var(--code)">123</text>
+            <rect x="116" y="148" width="28" height="24" rx="6" fill="var(--panel2)" stroke="var(--amber)"/><text x="130" y="164" text-anchor="middle" fill="var(--code)">45</text>
+            <rect x="148" y="148" width="18" height="24" rx="6" fill="var(--panel2)" stroke="var(--green)"/><text x="157" y="164" text-anchor="middle" fill="var(--code)">.</text>
+            <rect x="170" y="148" width="28" height="24" rx="6" fill="var(--panel2)" stroke="var(--accent2)"/><text x="184" y="164" text-anchor="middle" fill="var(--code)">67</text>
+          </g>
+          <text x="210" y="164" fill="var(--muted)" font-size="10">= 4 tokens — digits split unpredictably</text>
+        </svg>
+        <p class="viz-caption">The model never sees letters — each chunk becomes a number, and that's the whole input. Rule of thumb: ~4 characters per token in English.</p>
+        <p>Consequences: models struggle to count letters ("how many r's in strawberry?" — it may see <code>str</code>+<code>aw</code>+<code>berry</code>, letters aren't individually represented); arithmetic on long numbers is shaky for the same reason; non-English languages often cost 2–3× more tokens for the same meaning; and <b>everything is billed and budgeted in tokens</b> — context windows, API pricing, latency all count in this unit.</p>
+        <p class="rel">↳ Related: <a data-jump="c-context">Context windows</a> · <a data-jump="c-code-tokens">How coding agents spend tokens</a></p>
       </div>
     </details>
 
@@ -1197,6 +1237,38 @@
       </div>
     </details>
 
+    <details class="card" id="c-code-tokens">
+      <summary><span class="stage" title="Seedling — new note">🌱</span> How coding agents spend tokens <span class="tag">core</span></summary>
+      <div class="body">
+        <p>A coding agent doesn't "know" your repo — it knows what's currently in its context window, and every part of the job competes for that same token budget. The system prompt and tool definitions are rent paid up front; every file it reads, every terminal output, every diff comes back as tokens; and it still needs headroom left to reason and write code.</p>
+        <svg class="viz" style="max-width:520px" viewBox="0 0 540 190" role="img" aria-label="A context window budget bar split between system prompt, conversation, file reads, terminal output, and remaining headroom">
+          <text x="270" y="24" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="600">one context window, mid-task</text>
+          <rect x="30" y="40" width="76" height="44" fill="var(--panel2)" stroke="var(--muted)"/>
+          <rect x="106" y="40" width="50" height="44" fill="var(--panel2)" stroke="var(--accent)" stroke-width="2"/>
+          <rect x="156" y="40" width="178" height="44" fill="var(--panel2)" stroke="var(--accent2)" stroke-width="2"/>
+          <rect x="334" y="40" width="90" height="44" fill="var(--panel2)" stroke="var(--amber)" stroke-width="2"/>
+          <rect class="pulse" x="424" y="40" width="86" height="44" fill="var(--green)" fill-opacity=".18" stroke="var(--green)" stroke-width="2" stroke-dasharray="6 4"/>
+          <line x1="68" y1="88" x2="68" y2="102" stroke="var(--muted)"/>
+          <text x="68" y="116" text-anchor="middle" fill="var(--muted)" font-size="9.5">system prompt</text>
+          <text x="68" y="128" text-anchor="middle" fill="var(--muted)" font-size="9.5">+ tool definitions</text>
+          <line x1="131" y1="88" x2="131" y2="140" stroke="var(--muted)"/>
+          <text x="131" y="154" text-anchor="middle" fill="var(--accent)" font-size="9.5">task + plan</text>
+          <line x1="245" y1="88" x2="245" y2="102" stroke="var(--muted)"/>
+          <text x="245" y="116" text-anchor="middle" fill="var(--accent2)" font-size="9.5">files it has read</text>
+          <text x="245" y="128" text-anchor="middle" fill="var(--muted)" font-size="9">(a 5,000-line file ≈ 60K tokens)</text>
+          <line x1="379" y1="88" x2="379" y2="140" stroke="var(--muted)"/>
+          <text x="379" y="154" text-anchor="middle" fill="var(--amber)" font-size="9.5">terminal output, diffs, errors</text>
+          <line x1="467" y1="88" x2="467" y2="102" stroke="var(--muted)"/>
+          <text x="467" y="116" text-anchor="middle" fill="var(--green)" font-size="9.5" font-weight="600">headroom left</text>
+          <text x="467" y="128" text-anchor="middle" fill="var(--muted)" font-size="9">to think + write</text>
+          <text x="270" y="180" text-anchor="middle" fill="var(--muted)" font-size="10" font-style="italic">when this bar fills, quality drops — the agent must summarize old context or start fresh</text>
+        </svg>
+        <p>This budget explains most coding-agent behavior. They <b>search first, read second</b> — grep for the relevant function instead of reading whole files, because a repo is usually 100× bigger than any context window. They <b>edit with diffs</b> rather than rewriting files — output is generated token-by-token, so a 10-line patch is faster and safer than re-emitting 500 lines. On long tasks they <b>compact</b> — summarize older turns to reclaim space — and keep plans or notes in external files that survive across sessions.</p>
+        <p>It also explains how to get better results from one: scope tasks tightly, point it at the right files instead of letting it wander, and start a fresh session per task rather than letting one conversation accumulate an entire repo's worth of stale reads.</p>
+        <p class="rel">↳ Related: <a data-jump="c-tokens">Tokens, up close</a> · <a data-jump="c-context">Context windows</a> · <a data-jump="c-agents">What makes an LLM an agent</a></p>
+      </div>
+    </details>
+
     <details class="card" id="c-rag">
       <summary><span class="stage" title="Seedling — new note">🌱</span> RAG: retrieval-augmented generation <span class="tag">core</span></summary>
       <div class="body">
@@ -1454,6 +1526,7 @@
       <div class="g-item"><dt>Attention</dt><dd>— transformer mechanism where every token weighs its relevance to every other token in parallel.</dd></div>
       <div class="g-item"><dt>AUC</dt><dd>— area under the ROC curve; how well a classifier separates classes across all thresholds.</dd></div>
       <div class="g-item"><dt>Backpropagation</dt><dd>— propagating weight adjustments backward through network layers to reduce loss.</dd></div>
+      <div class="g-item"><dt>BPE (byte-pair encoding)</dt><dd>— the algorithm that learns a tokenizer's vocabulary: frequent character chunks become single tokens, rare words split into several.</dd></div>
       <div class="g-item"><dt>Chain-of-thought</dt><dd>— prompting a model to reason step-by-step before answering; improves accuracy on hard problems.</dd></div>
       <div class="g-item"><dt>Classification</dt><dd>— supervised learning that predicts a class label, binary or multiclass.</dd></div>
       <div class="g-item"><dt>Clustering</dt><dd>— unsupervised grouping of observations by feature similarity (e.g., k-means).</dd></div>
@@ -1692,7 +1765,9 @@
     ["OCR vs field extraction?", "OCR tells you WHAT text exists in an image (with positions and confidence); field extraction tells you what it MEANS — mapping \"Fourth Coffee\" to Vendor and \"6.97\" to Total."],
     ["Three approaches to field extraction?", "Templates (rules + fixed layouts: fast, brittle), trained ML models (learn label–value relationships across varied layouts), and LLM schema-based extraction (give the model the document text plus a field schema)."],
     ["Where do LLMs sit in the AI hierarchy?", "AI ⊃ machine learning ⊃ deep learning ⊃ transformers ⊃ LLMs. One architecture, one objective (next-token prediction), mostly one data type (text) — the most visible slice of AI, and one of the smallest."],
-    ["When should you NOT use an LLM?", "Tabular prediction (churn, pricing, fraud) — gradient boosting usually wins; tight latency/cost budgets (an LLM call ≈ 1000× a tree model); decisions that must be explainable. LLMs are for language tasks."]
+    ["When should you NOT use an LLM?", "Tabular prediction (churn, pricing, fraud) — gradient boosting usually wins; tight latency/cost budgets (an LLM call ≈ 1000× a tree model); decisions that must be explainable. LLMs are for language tasks."],
+    ["Why can't LLMs count the r's in strawberry?", "They see tokens, not letters — 'strawberry' arrives as chunks like str+aw+berry, and individual characters aren't represented. Same reason arithmetic on long digit strings is shaky."],
+    ["Why do coding agents grep instead of reading the whole repo?", "The repo is ~100× bigger than the context window, and every file read spends tokens from the same budget needed for reasoning and output. Search first, read selectively, edit with diffs, compact long sessions."]
   ];
   var SR_KEY = "aiDash.sr";
   var DAY = 86400000;
