@@ -144,6 +144,12 @@
     45%{transform:translate(130px,-20px);} 55%{transform:translate(130px,-20px);}
     90%{transform:translate(260px,0); opacity:1;} 100%{transform:translate(260px,0); opacity:0;}
   }
+  .gen1{animation:genA 6.5s infinite;}
+  .gen2{animation:genB 6.5s infinite;}
+  .gen3{animation:genC 6.5s infinite;}
+  @keyframes genA{0%,20%{opacity:0;} 28%,100%{opacity:1;}}
+  @keyframes genB{0%,45%{opacity:0;} 53%,100%{opacity:1;}}
+  @keyframes genC{0%,70%{opacity:0;} 78%,100%{opacity:1;}}
   .sig-dot.d2{animation-name:sigmove2; animation-delay:1.8s;}
   @keyframes sigmove2{
     0%{transform:translate(0,0); opacity:0;} 10%{opacity:1;}
@@ -251,6 +257,48 @@
         <p>A model is software that encapsulates a <b>function</b>: it calculates an output from inputs. Defining that function from data is <b>training</b>; using it to predict new values is <b>inferencing</b>.</p>
         <p>Training data = past observations. The observed attributes are <b>features</b> (<code>x</code>, usually a vector <code>[x1,x2,x3,...]</code>) and the known value you want to predict is the <b>label</b> (<code>y</code>). An algorithm fits the data to find <code>y = f(x)</code>. Predictions from the model are written <code>ŷ</code> ("y-hat") because they're calculated, not observed.</p>
         <p><i>Example:</i> ice cream sales — weather measurements are <code>x</code>, ice creams sold is <code>y</code>.</p>
+        <p class="rel">↳ Related: <a data-jump="c-inference">Training vs inference — a model's two lives</a></p>
+      </div>
+    </details>
+
+    <details class="card" id="c-inference">
+      <summary><span class="stage" title="Seedling — new note">🌱</span> Training vs inference: a model's two lives <span class="tag">core</span></summary>
+      <div class="body">
+        <p>Every model lives two very different lives. <b>Training</b> happens rarely: show the model data, measure error, adjust weights, repeat — hours or days of expensive GPU time. <b>Inference</b> (or <i>inferencing</i>) is everything after: the weights are <b>frozen</b> and the model just runs forward, turning new inputs into predictions — millions of times a day, where speed and cost per call are what matter.</p>
+        <svg class="viz" style="max-width:520px" viewBox="0 0 540 190" role="img" aria-label="Training phase with changing weights versus inference phase with frozen weights serving requests">
+          <rect x="12" y="30" width="228" height="125" rx="10" fill="var(--panel2)" stroke="var(--accent2)" stroke-width="1.5"/>
+          <text x="126" y="52" text-anchor="middle" fill="var(--accent2)" font-size="12" font-weight="700">TRAINING</text>
+          <rect x="28" y="70" width="84" height="30" rx="8" fill="var(--bg)" stroke="var(--border)"/>
+          <text x="70" y="89" text-anchor="middle" fill="var(--text)" font-size="10">data + labels</text>
+          <line class="flow" x1="116" y1="85" x2="144" y2="85" stroke="var(--muted)" stroke-width="2"/>
+          <rect x="148" y="70" width="76" height="30" rx="8" fill="var(--bg)" stroke="var(--accent2)" stroke-width="2"/>
+          <text x="186" y="89" text-anchor="middle" fill="var(--text)" font-size="10">model (w)</text>
+          <path class="flow" d="M212,104 Q226,128 186,128 Q150,128 160,106" fill="none" stroke="var(--accent2)" stroke-width="2"/>
+          <text x="186" y="145" text-anchor="middle" fill="var(--muted)" font-size="9">weights update every step ↺</text>
+          <text x="126" y="170" text-anchor="middle" fill="var(--muted)" font-size="9" font-style="italic">occasional · expensive · learning</text>
+          <line class="flow" x1="248" y1="92" x2="288" y2="92" stroke="var(--green)" stroke-width="2.5"/>
+          <text x="268" y="80" text-anchor="middle" fill="var(--green)" font-size="9" font-weight="600">deploy</text>
+          <rect x="296" y="30" width="232" height="125" rx="10" fill="var(--panel2)" stroke="var(--green)" stroke-width="1.5"/>
+          <text x="412" y="52" text-anchor="middle" fill="var(--green)" font-size="12" font-weight="700">INFERENCE</text>
+          <g fill="var(--muted)" font-size="9.5">
+            <text x="322" y="78">request →</text>
+            <text x="322" y="98">request →</text>
+            <text x="322" y="118">request →</text>
+          </g>
+          <rect x="382" y="70" width="80" height="52" rx="8" fill="var(--bg)" stroke="var(--green)" stroke-width="2"/>
+          <text x="422" y="91" text-anchor="middle" fill="var(--text)" font-size="10">model 🔒</text>
+          <text x="422" y="106" text-anchor="middle" fill="var(--muted)" font-size="8.5">weights frozen</text>
+          <g fill="var(--body-text)" font-size="9.5">
+            <text x="470" y="78">→ ŷ</text>
+            <text x="470" y="98">→ ŷ</text>
+            <text x="470" y="118">→ ŷ</text>
+          </g>
+          <text x="412" y="145" text-anchor="middle" fill="var(--muted)" font-size="9">forward pass only — no learning</text>
+          <text x="412" y="170" text-anchor="middle" fill="var(--muted)" font-size="9" font-style="italic">constant · at scale · predicting</text>
+        </svg>
+        <p class="viz-caption">Left changes the model; right just uses it. Over a model's lifetime, inference dwarfs training in total compute and cost.</p>
+        <p>Inference comes in flavors: <b>real-time</b> (an endpoint answers each request in milliseconds — fraud checks, autocomplete), <b>batch</b> (score a million rows overnight), and <b>edge/on-device</b> (the model runs on your phone or laptop — no network, private by default). And one misconception worth killing: a deployed model <i>does not learn from your inputs</i>. If it seems to remember you, that's context or stored data being fed back in — the weights only change when someone retrains.</p>
+        <p class="rel">↳ Related: <a data-jump="c-llm-inference">LLM inference: one token at a time</a> · <a data-jump="c-mlops">MLOps in a nutshell</a> · <a data-jump="c-runlocal">Running models locally</a></p>
       </div>
     </details>
 
@@ -838,6 +886,39 @@
         <p class="viz-caption">The model never sees letters — each chunk becomes a number, and that's the whole input. Rule of thumb: ~4 characters per token in English.</p>
         <p>Consequences: models struggle to count letters ("how many r's in strawberry?" — it may see <code>str</code>+<code>aw</code>+<code>berry</code>, letters aren't individually represented); arithmetic on long numbers is shaky for the same reason; non-English languages often cost 2–3× more tokens for the same meaning; and <b>everything is billed and budgeted in tokens</b> — context windows, API pricing, latency all count in this unit.</p>
         <p class="rel">↳ Related: <a data-jump="c-context">Context windows</a> · <a data-jump="c-code-tokens">How coding agents spend tokens</a></p>
+      </div>
+    </details>
+
+    <details class="card" id="c-llm-inference">
+      <summary><span class="stage" title="Seedling — new note">🌱</span> LLM inference: one token at a time <span class="tag">core</span></summary>
+      <div class="body">
+        <p>LLM generation is <b>autoregressive</b>: the model runs one full forward pass through all its layers to produce a single token, appends it to the input, and runs again — every new token conditioned on everything before it. That loop is the whole show.</p>
+        <svg class="viz" style="max-width:520px" viewBox="0 0 540 195" role="img" aria-label="Autoregressive loop: prompt tokens feed the model, which appends one generated token per pass">
+          <g font-family="Consolas,monospace" font-size="11">
+            <rect x="26" y="22" width="36" height="24" rx="6" fill="var(--panel2)" stroke="var(--muted)"/><text x="44" y="38" text-anchor="middle" fill="var(--muted)">The</text>
+            <rect x="66" y="22" width="60" height="24" rx="6" fill="var(--panel2)" stroke="var(--muted)"/><text x="96" y="38" text-anchor="middle" fill="var(--muted)">capital</text>
+            <rect x="130" y="22" width="28" height="24" rx="6" fill="var(--panel2)" stroke="var(--muted)"/><text x="144" y="38" text-anchor="middle" fill="var(--muted)">of</text>
+            <rect x="162" y="22" width="56" height="24" rx="6" fill="var(--panel2)" stroke="var(--muted)"/><text x="190" y="38" text-anchor="middle" fill="var(--muted)">France</text>
+            <rect x="222" y="22" width="28" height="24" rx="6" fill="var(--panel2)" stroke="var(--muted)"/><text x="236" y="38" text-anchor="middle" fill="var(--muted)">is</text>
+            <g class="gen1"><rect x="254" y="22" width="48" height="24" rx="6" fill="var(--green)" fill-opacity=".2" stroke="var(--green)" stroke-width="2"/><text x="278" y="38" text-anchor="middle" fill="var(--text)">Paris</text></g>
+            <g class="gen2"><rect x="306" y="22" width="20" height="24" rx="6" fill="var(--green)" fill-opacity=".2" stroke="var(--green)" stroke-width="2"/><text x="316" y="38" text-anchor="middle" fill="var(--text)">.</text></g>
+            <g class="gen3"><rect x="330" y="22" width="44" height="24" rx="6" fill="var(--panel2)" stroke="var(--amber)" stroke-width="2" stroke-dasharray="4 3"/><text x="352" y="38" text-anchor="middle" fill="var(--amber)">end</text></g>
+          </g>
+          <text x="138" y="66" text-anchor="middle" fill="var(--muted)" font-size="9">prompt — “prefill”: processed in parallel, fast</text>
+          <text x="316" y="66" text-anchor="middle" fill="var(--green)" font-size="9">“decode”: one per pass</text>
+          <path class="flow" d="M138,74 Q138,105 210,112" fill="none" stroke="var(--muted)" stroke-width="2"/>
+          <rect x="214" y="95" width="130" height="42" rx="10" fill="var(--panel2)" stroke="var(--accent2)" stroke-width="2"/>
+          <text x="279" y="113" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="700">LLM forward pass</text>
+          <text x="279" y="128" text-anchor="middle" fill="var(--muted)" font-size="8.5">all layers, every token</text>
+          <path class="flow" d="M348,110 Q400,100 380,56 " fill="none" stroke="var(--green)" stroke-width="2"/>
+          <text x="416" y="92" fill="var(--green)" font-size="9">emit next token</text>
+          <path class="flow" d="M376,46 Q470,60 420,130 Q390,165 300,142" fill="none" stroke="var(--amber)" stroke-width="2" stroke-dasharray="6 4"/>
+          <text x="442" y="150" text-anchor="middle" fill="var(--amber)" font-size="9">append &amp; run again</text>
+          <text x="270" y="182" text-anchor="middle" fill="var(--muted)" font-size="10" font-style="italic">the loop exits when the model emits a stop token — “deciding to stop” is itself a prediction</text>
+        </svg>
+        <p class="viz-caption">Why responses stream word-by-word: you're watching individual decode passes land in real time.</p>
+        <p>This loop explains a lot of LLM economics. <b>Prefill</b> reads your whole prompt in one parallel pass (cheap per token); <b>decode</b> is sequential (one pass per token) — which is why output tokens cost more and long answers feel slow. The <b>KV cache</b> stores attention math for tokens already seen, so each pass only computes the newest token instead of re-reading the conversation. <b>Temperature and top-p</b> live here too — they shape each token pick at inference, never touching the weights. And <b>reasoning models</b> are just this loop given permission to run longer: spending extra "thinking" tokens before answering — <b>test-time compute</b> — buys accuracy with latency.</p>
+        <p class="rel">↳ Related: <a data-jump="c-inference">Training vs inference</a> · <a data-jump="c-tokens">Tokens, up close</a> · <a data-jump="c-temp">Temperature &amp; sampling</a></p>
       </div>
     </details>
 
@@ -1545,8 +1626,9 @@
       <div class="g-item"><dt>Gradient descent</dt><dd>— optimization that nudges each weight downhill against the loss.</dd></div>
       <div class="g-item"><dt>Grounding</dt><dd>— supplying source material (via RAG) so answers cite real data instead of guessing.</dd></div>
       <div class="g-item"><dt>Hallucination</dt><dd>— a fluent but false model output; mitigated by grounding (RAG).</dd></div>
-      <div class="g-item"><dt>Inference</dt><dd>— using a trained model to make predictions on new data.</dd></div>
+      <div class="g-item"><dt>Inference</dt><dd>— using a trained model to make predictions; weights are frozen, so the model doesn't learn from your inputs. For LLMs: one forward pass per generated token.</dd></div>
       <div class="g-item"><dt>Information extraction</dt><dd>— turning documents into structured data: OCR finds the text, field extraction maps it to labeled fields.</dd></div>
+      <div class="g-item"><dt>KV cache</dt><dd>— inference optimization that stores attention results for tokens already processed, so each new token doesn't recompute the whole conversation.</dd></div>
       <div class="g-item"><dt>Label (y)</dt><dd>— the known value a supervised model learns to predict.</dd></div>
       <div class="g-item"><dt>LLM</dt><dd>— large language model; a transformer trained to predict the next token at internet scale.</dd></div>
       <div class="g-item"><dt>LoRA / QLoRA</dt><dd>— low-rank adapters; cheap fine-tuning that trains a thin layer instead of all weights.</dd></div>
@@ -1576,6 +1658,7 @@
       <div class="g-item"><dt>Speech synthesis (TTS)</dt><dd>— converting text to audio: normalize → phonemes → prosody → neural vocoder.</dd></div>
       <div class="g-item"><dt>Supervised learning</dt><dd>— training on data with known labels.</dd></div>
       <div class="g-item"><dt>Temperature</dt><dd>— sampling parameter controlling output randomness.</dd></div>
+      <div class="g-item"><dt>Test-time compute</dt><dd>— letting a model spend more inference tokens "thinking" before answering; how reasoning models trade latency for accuracy.</dd></div>
       <div class="g-item"><dt>Token</dt><dd>— the unit models read: a word or sub-word chunk.</dd></div>
       <div class="g-item"><dt>Transformer</dt><dd>— the 2017 attention-based architecture behind modern LLMs.</dd></div>
       <div class="g-item"><dt>Unsupervised learning</dt><dd>— finding structure in unlabeled data.</dd></div>
@@ -1767,7 +1850,9 @@
     ["Where do LLMs sit in the AI hierarchy?", "AI ⊃ machine learning ⊃ deep learning ⊃ transformers ⊃ LLMs. One architecture, one objective (next-token prediction), mostly one data type (text) — the most visible slice of AI, and one of the smallest."],
     ["When should you NOT use an LLM?", "Tabular prediction (churn, pricing, fraud) — gradient boosting usually wins; tight latency/cost budgets (an LLM call ≈ 1000× a tree model); decisions that must be explainable. LLMs are for language tasks."],
     ["Why can't LLMs count the r's in strawberry?", "They see tokens, not letters — 'strawberry' arrives as chunks like str+aw+berry, and individual characters aren't represented. Same reason arithmetic on long digit strings is shaky."],
-    ["Why do coding agents grep instead of reading the whole repo?", "The repo is ~100× bigger than the context window, and every file read spends tokens from the same budget needed for reasoning and output. Search first, read selectively, edit with diffs, compact long sessions."]
+    ["Why do coding agents grep instead of reading the whole repo?", "The repo is ~100× bigger than the context window, and every file read spends tokens from the same budget needed for reasoning and output. Search first, read selectively, edit with diffs, compact long sessions."],
+    ["Does an LLM learn from your conversation?", "No — inference runs with frozen weights. Apparent memory is the conversation sitting in the context window (or saved externally and fed back in). Weights only change during training or fine-tuning."],
+    ["Why do LLM responses stream word by word?", "Generation is autoregressive: one full forward pass per token, each conditioned on everything before it. Prefill reads the prompt in parallel (fast); decode emits tokens one at a time — that's the stream."]
   ];
   var SR_KEY = "aiDash.sr";
   var DAY = 86400000;
