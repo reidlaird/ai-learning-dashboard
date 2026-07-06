@@ -738,7 +738,33 @@
 
     <h3 class="sub">Knowledge notes</h3>
 
-    <details class="card" id="c-text2num" open>
+    <details class="card" id="c-llm-umbrella" open>
+      <summary><span class="stage" title="Seedling — new note">🌱</span> Where LLMs sit in the AI universe <span class="tag">core</span></summary>
+      <div class="body">
+        <p>LLMs are the most recognizable AI there is — and a <i>tiny</i> slice of the field. Each ring below contains the next: AI includes techniques that aren't learning at all (rules, search, planning); most machine learning isn't deep; most deep learning isn't a transformer; and an LLM is one transformer application — next-token prediction on text.</p>
+        <svg class="viz" viewBox="0 0 480 345" role="img" aria-label="Nested circles: AI contains machine learning contains deep learning contains transformers contains LLMs">
+          <circle cx="240" cy="172" r="155" fill="var(--panel2)" stroke="var(--muted)" stroke-width="1.5"/>
+          <circle cx="240" cy="185" r="122" fill="var(--bg)" stroke="var(--accent)" stroke-width="1.5"/>
+          <circle cx="240" cy="198" r="90" fill="var(--panel2)" stroke="var(--accent2)" stroke-width="1.5"/>
+          <circle cx="240" cy="211" r="58" fill="var(--bg)" stroke="var(--amber)" stroke-width="1.5"/>
+          <circle class="pulse" cx="240" cy="224" r="26" fill="var(--green)" fill-opacity=".25" stroke="var(--green)" stroke-width="2"/>
+          <text x="240" y="38" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="700">ARTIFICIAL INTELLIGENCE</text>
+          <text x="240" y="52" text-anchor="middle" fill="var(--muted)" font-size="9">also: rules, search, planning, symbolic logic</text>
+          <text x="240" y="84" text-anchor="middle" fill="var(--accent)" font-size="12" font-weight="700">MACHINE LEARNING</text>
+          <text x="240" y="98" text-anchor="middle" fill="var(--muted)" font-size="9">also: regression, k-means, gradient boosting</text>
+          <text x="240" y="129" text-anchor="middle" fill="var(--accent2)" font-size="12" font-weight="700">DEEP LEARNING</text>
+          <text x="240" y="143" text-anchor="middle" fill="var(--muted)" font-size="9">also: CNNs, RNNs, GANs, diffusion</text>
+          <text x="240" y="174" text-anchor="middle" fill="var(--amber)" font-size="12" font-weight="700">TRANSFORMERS</text>
+          <text x="240" y="188" text-anchor="middle" fill="var(--muted)" font-size="9">also: vision &amp; speech transformers</text>
+          <text x="240" y="228" text-anchor="middle" fill="var(--text)" font-size="12" font-weight="700">LLMs</text>
+        </svg>
+        <p class="viz-caption">Five rings deep: the chatbot in the news is the innermost dot, not the umbrella.</p>
+        <p>Why the smallest circle gets all the attention: LLMs are the first AI you can <i>talk to</i>. No dataset, no training, no interface to learn — natural language in, natural language out, and one model handles a thousand tasks. That generality plus the ChatGPT moment made LLMs the public face of a field that is mostly other things.</p>
+        <p class="rel">↳ Related: <a data-jump="c-ml-types">Types of machine learning</a> · <a data-jump="c-archs">Architectures to know</a> · <a data-jump="c-llm-iceberg">The AI you don't see</a></p>
+      </div>
+    </details>
+
+    <details class="card" id="c-text2num">
       <summary><span class="stage" title="Seedling — early note">🌱</span> From text to numbers <span class="tag">core</span></summary>
       <div class="body">
         <p>Models can't read — text must become numbers. <b>Tokenization</b> splits text into tokens (words or sub-words); <b>embeddings</b> map each token to a vector where similar meanings sit close together ("dog" near "puppy", far from "carburetor"). Classic NLP tasks: sentiment analysis, entity recognition, translation, summarization.</p>
@@ -809,6 +835,32 @@
       <div class="body">
         <p>An <b>LLM</b> is a huge transformer trained to predict the next token, which turns out to require absorbing grammar, facts, and reasoning patterns. <b>Prompts</b> are the input that conditions its output — prompt engineering is shaping that input deliberately. <b>Agents</b> pair an LLM with tools and memory so it can take actions (search, run code, call APIs), not just generate text. <b>RAG</b> (retrieval-augmented generation) grounds answers in your own documents to reduce hallucination.</p>
         <p class="rel">↳ Related: <a data-jump="c-agents">What makes an LLM an agent</a> · <a data-jump="c-rag">RAG</a> · <a data-jump="c-prompt">Anatomy of a prompt</a></p>
+      </div>
+    </details>
+
+    <details class="card" id="c-llm-iceberg">
+      <summary><span class="stage" title="Seedling — new note">🌱</span> The AI you don't see — and when NOT to use an LLM</summary>
+      <div class="body">
+        <p>Most production AI is invisible classical ML that never gets called "AI" in conversation: the spam filter, the fraud check on your card, the recommender behind your feed, the ETA on your map. It ran quietly for a decade before anyone could chat with a model.</p>
+        <svg class="viz" viewBox="0 0 480 270" role="img" aria-label="Iceberg: chatbots above the waterline, everyday machine learning below it">
+          <polygon points="240,18 196,92 288,92" fill="var(--panel2)" stroke="var(--accent)" stroke-width="2"/>
+          <polygon points="196,92 288,92 330,120 344,190 268,248 178,236 128,168 150,116" fill="var(--panel2)" fill-opacity=".55" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="1 0"/>
+          <line x1="20" y1="92" x2="460" y2="92" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="7 5" opacity=".6"/>
+          <text x="240" y="60" text-anchor="middle" fill="var(--text)" font-size="11" font-weight="700">chatbots · image gen</text>
+          <text x="30" y="82" fill="var(--muted)" font-size="10" font-style="italic">what makes headlines</text>
+          <text x="450" y="110" text-anchor="end" fill="var(--muted)" font-size="10" font-style="italic">what runs the world</text>
+          <g fill="var(--body-text)" font-size="10.5" text-anchor="middle">
+            <text x="240" y="120">spam filters · fraud detection</text>
+            <text x="238" y="142">recommenders · search ranking</text>
+            <text x="236" y="164">demand forecasting · credit scoring</text>
+            <text x="240" y="186">route &amp; ETA prediction</text>
+            <text x="242" y="208">anomaly detection · churn models</text>
+            <text x="248" y="230">quality inspection · pricing</text>
+          </g>
+        </svg>
+        <p class="viz-caption">The waterline is public attention — most deployed ML sits below it, and most of it isn't an LLM.</p>
+        <p>Which is why "use AI" shouldn't default to "use an LLM." Reach for <b>classical ML</b> when the data is tabular (churn, pricing, fraud — gradient boosting usually beats an LLM there), when latency and cost budgets are tight (an LLM call is ~1000× the compute of a tree model), or when you must explain every decision to a regulator. Reach for an <b>LLM</b> when the task is language: understanding, generating, summarizing, extracting, conversing.</p>
+        <p class="rel">↳ Related: <a data-jump="c-mlvsdl">Classical ML vs deep learning</a> · <a data-jump="c-seq">The 2026 build sequence</a></p>
       </div>
     </details>
 
@@ -1416,6 +1468,7 @@
       <div class="g-item"><dt>Feature (x)</dt><dd>— an observed attribute used as model input.</dd></div>
       <div class="g-item"><dt>Fine-tuning</dt><dd>— continuing a model's training on your own examples to change its behavior.</dd></div>
       <div class="g-item"><dt>Function calling</dt><dd>— the model outputs structured JSON naming a tool to invoke with arguments.</dd></div>
+      <div class="g-item"><dt>Generative AI</dt><dd>— models that create content (text, images, audio, code); LLMs are its text branch. A subset of deep learning, which is a subset of ML, which is a subset of AI.</dd></div>
       <div class="g-item"><dt>Gradient descent</dt><dd>— optimization that nudges each weight downhill against the loss.</dd></div>
       <div class="g-item"><dt>Grounding</dt><dd>— supplying source material (via RAG) so answers cite real data instead of guessing.</dd></div>
       <div class="g-item"><dt>Hallucination</dt><dd>— a fluent but false model output; mitigated by grounding (RAG).</dd></div>
@@ -1637,7 +1690,9 @@
     ["What is a phoneme?", "The smallest unit of sound that distinguishes words — English has ~44; \"cat\" is /k/+/æ/+/t/. Acoustic models predict phonemes; language models turn them into words."],
     ["Why does synthesized speech sound robotic?", "Usually flat prosody — rhythm, stress, intonation — not bad phonemes. Modern TTS uses a transformer to predict pitch, pauses, and emphasis, then a neural vocoder generates the waveform."],
     ["OCR vs field extraction?", "OCR tells you WHAT text exists in an image (with positions and confidence); field extraction tells you what it MEANS — mapping \"Fourth Coffee\" to Vendor and \"6.97\" to Total."],
-    ["Three approaches to field extraction?", "Templates (rules + fixed layouts: fast, brittle), trained ML models (learn label–value relationships across varied layouts), and LLM schema-based extraction (give the model the document text plus a field schema)."]
+    ["Three approaches to field extraction?", "Templates (rules + fixed layouts: fast, brittle), trained ML models (learn label–value relationships across varied layouts), and LLM schema-based extraction (give the model the document text plus a field schema)."],
+    ["Where do LLMs sit in the AI hierarchy?", "AI ⊃ machine learning ⊃ deep learning ⊃ transformers ⊃ LLMs. One architecture, one objective (next-token prediction), mostly one data type (text) — the most visible slice of AI, and one of the smallest."],
+    ["When should you NOT use an LLM?", "Tabular prediction (churn, pricing, fraud) — gradient boosting usually wins; tight latency/cost budgets (an LLM call ≈ 1000× a tree model); decisions that must be explainable. LLMs are for language tasks."]
   ];
   var SR_KEY = "aiDash.sr";
   var DAY = 86400000;
