@@ -1,22 +1,26 @@
-# 🧠 AI Learning Dashboard
+# 🧠 AI Knowledge Library
 
-**Live dashboard → https://reidlaird.github.io/ai-learning-dashboard/**
+**Live library → https://reidlaird.github.io/ai-learning-dashboard/**
 
-A personal knowledge base and learning roadmap for working across the AI umbrella — starting from machine learning fundamentals and building out into deeper territory.
+A digital library of curated AI knowledge — distilled notes, visual explainers, and hand-picked resources, growing from machine learning fundamentals out across the AI umbrella.
 
 ## What's inside
 
-| Tab | Contents |
+| Shelf | Contents |
 |---|---|
-| ML Fundamentals | Notes from [Introduction to machine learning concepts](https://learn.microsoft.com/en-us/training/modules/fundamentals-machine-learning/) (Microsoft Learn) — models, regression, classification, clustering |
-| Deep Learning | How DL differs from classical ML; neural nets, backprop, key architectures |
-| Computer Vision | Images as data, CNNs, vision tasks, transformers & multimodal models |
-| NLP & LLMs | Tokenization, attention, LLMs, prompts, agents, RAG |
-| Responsible AI & MLOps | Six responsible AI principles; ML lifecycle in production |
-| Open & Local Models | Open weights vs closed, SLMs, Ollama, Foundry Local, quantization |
-| Flashcards | 16-card self-quiz deck covering the fundamentals |
+| ML Fundamentals | Distilled notes from [Introduction to machine learning concepts](https://learn.microsoft.com/en-us/training/modules/fundamentals-machine-learning/) (Microsoft Learn) — models, regression, classification, clustering, overfitting & validation |
+| Deep Learning | Classical ML vs DL pipelines, neural net anatomy, activation functions, animated gradient descent, key architectures |
+| Computer Vision | Images as numbers (pixel grid), animated convolution filter, vision tasks side-by-side, transformers & multimodal models |
+| NLP & LLMs | Tokenization→embedding pipeline, attention weights visual, LLMs, context windows, hallucination & grounding |
+| Agents & RAG | Animated agent loop, full RAG pipeline diagram, embeddings & vector search, the prompt→RAG→fine-tune sequence |
+| Prompting & Fine-tuning | Prompt anatomy diagram, temperature & sampling visual, LoRA & distillation |
+| Reinforcement Learning | The agent↔environment loop (animated), key algorithms, RLHF |
+| Responsible AI & MLOps | Six responsible AI principles; ML lifecycle loop with drift-retrain cycle |
+| Open & Local Models | Open weights vs closed, SLMs, Ollama, Foundry Local, quantization memory chart |
+| AI History | 75-year timeline from Turing to agents |
+| Glossary | ~50 terms, A–Z, filterable |
+| Flashcards | 30-card spaced-repetition deck covering every shelf |
 
-## Notes
+## Design
 
-- Module progress checkboxes are saved per browser (localStorage) — phone and desktop track separately.
-- Single self-contained HTML file, no dependencies. To update: edit `index.html` and commit.
+2026-refresh: Pantone Cloud Dancer light theme with a warm dark mode (default) — toggle via the ☀️/🌙 button, remembered per browser. Single self-contained HTML file, no dependencies; all 19 diagrams are inline SVG, several CSS-animated (gradient descent, sliding convolution, agent loop, flowing pipelines). Animations respect the OS reduced-motion setting. To update: edit `index.html` and commit. `ai-learning-dashboard.html` is now just a redirect to `index.html`.
