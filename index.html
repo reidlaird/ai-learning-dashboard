@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reid's AI Knowledge Library</title>
+<meta name="description" content="A curated, visual library of AI knowledge — machine learning fundamentals, deep learning, LLMs, agents, RAG, speech, and more. Animated diagrams, a glossary, and spaced-repetition flashcards.">
+<meta property="og:title" content="Reid's AI Knowledge Library">
+<meta property="og:description" content="A curated, visual library of AI knowledge — from ML fundamentals to LLMs, agents, and RAG. Animated diagrams, glossary, and flashcards in one page.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://reidlaird.github.io/ai-learning-dashboard/">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Reid's AI Knowledge Library">
+<meta name="twitter:description" content="A curated, visual library of AI knowledge — ML fundamentals to LLMs, agents, and RAG.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%A0%3C/text%3E%3C/svg%3E">
 <style>
   :root{
     --bg:#f0eee9; --panel:#faf9f6; --panel2:#e9e5dc; --border:#ddd7ca;
@@ -470,7 +479,7 @@
   <!-- ============ DEEP LEARNING ============ -->
   <section class="tab" id="tab-dl">
     <h2>Deep Learning — and how it differs from classical ML</h2>
-    <p class="section-intro">Your stated goal: understand what makes deep learning distinct. Short version — classical ML fits relatively simple functions to features <i>you</i> define; deep learning stacks layers of neurons that <i>learn</i> the features themselves.</p>
+    <p class="section-intro">What makes deep learning distinct? Short version — classical ML fits relatively simple functions to features <i>you</i> define; deep learning stacks layers of neurons that <i>learn</i> the features themselves.</p>
 
     <h3 class="sub">Knowledge notes</h3>
 
@@ -575,8 +584,8 @@
     <h3 class="sub">Curated resources</h3>
     <ul class="resources">
       <li>
-        <div><a href="https://learn.microsoft.com/en-us/training/modules/fundamentals-machine-learning/8-deep-learning">Deep learning unit (re-read)</a>
-        <div class="desc">The DL unit from your fundamentals module — solid recap before going deeper.</div></div>
+        <div><a href="https://learn.microsoft.com/en-us/training/modules/fundamentals-machine-learning/8-deep-learning">Deep learning unit</a>
+        <div class="desc">The DL unit from the ML fundamentals module — a solid recap before going deeper.</div></div>
       </li>
       <li>
         <div><a href="https://learn.microsoft.com/en-us/training/modules/train-evaluate-deep-learn-models/">Train and evaluate deep learning models</a>
@@ -825,7 +834,7 @@
     <ul class="resources">
       <li>
         <div><a href="https://learn.microsoft.com/en-us/training/modules/introduction-language/">Introduction to natural language processing concepts</a>
-        <div class="desc">Text analysis foundations — assumes the ML basics you already have.</div></div>
+        <div class="desc">Text analysis foundations — builds on the ML Fundamentals shelf.</div></div>
       </li>
       <li>
         <div><a href="https://learn.microsoft.com/en-us/training/modules/introduction-large-language-models/">Introduction to large language models</a>
@@ -841,7 +850,7 @@
   <!-- ============ SPEECH & DOCUMENT INTELLIGENCE ============ -->
   <section class="tab" id="tab-speech">
     <h2>Speech &amp; Document Intelligence</h2>
-    <p class="section-intro">Two more AI workloads from the concepts path: teaching machines to hear and talk, and to turn messy documents into clean data. Both are pipelines of the building blocks you already know — transformers, CNNs, and language models.</p>
+    <p class="section-intro">Two more AI workloads, from Microsoft's AI-concepts path: teaching machines to hear and talk, and to turn messy documents into clean data. Both are pipelines built from blocks covered in earlier shelves — transformers, CNNs, and language models.</p>
 
     <h3 class="sub">Knowledge notes</h3>
 
@@ -1475,7 +1484,7 @@
     </div>
   </section>
 
-  <footer>Built with Claude · a living library, curated as I learn · note maturity: 🌱 seedling · 🌿 growing · 🌳 evergreen · animations honor reduced-motion settings · last updated July 5, 2026</footer>
+  <footer>Curated by Reid Laird · built with Claude · a living library that grows as I learn · note maturity: 🌱 seedling · 🌿 growing · 🌳 evergreen · animations honor reduced-motion settings · last updated July 5, 2026</footer>
 </div>
 
 <script>
@@ -1497,23 +1506,32 @@
     applyTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark");
   });
 
-  /* ---------- Tabs ---------- */
+  /* ---------- Tabs (with #deep-links) ---------- */
   var tabButtons = document.querySelectorAll("#tabs button");
+  function activateTab(name, updateHash){
+    var btn = document.querySelector('#tabs button[data-tab="' + name + '"]');
+    if (!btn || !document.getElementById("tab-" + name)) return false;
+    tabButtons.forEach(function(b){ b.classList.remove("active"); });
+    document.querySelectorAll("section.tab").forEach(function(s){ s.classList.remove("active"); });
+    btn.classList.add("active");
+    document.getElementById("tab-" + name).classList.add("active");
+    try { localStorage.setItem("aiDash.tab", name); } catch(e){}
+    if (updateHash) { try { history.replaceState(null, "", "#" + name); } catch(e){} }
+    return true;
+  }
   tabButtons.forEach(function(btn){
-    btn.addEventListener("click", function(){
-      tabButtons.forEach(function(b){ b.classList.remove("active"); });
-      document.querySelectorAll("section.tab").forEach(function(s){ s.classList.remove("active"); });
-      btn.classList.add("active");
-      document.getElementById("tab-" + btn.dataset.tab).classList.add("active");
-      try { localStorage.setItem("aiDash.tab", btn.dataset.tab); } catch(e){}
-    });
+    btn.addEventListener("click", function(){ activateTab(btn.dataset.tab, true); });
   });
-  try {
-    var savedTab = localStorage.getItem("aiDash.tab");
-    if (savedTab && document.getElementById("tab-" + savedTab)) {
-      document.querySelector('#tabs button[data-tab="' + savedTab + '"]').click();
-    }
-  } catch(e){}
+  window.addEventListener("hashchange", function(){
+    activateTab(location.hash.replace("#", ""), false);
+  });
+  /* priority: URL hash (shared links) > last-visited tab */
+  if (!activateTab(location.hash.replace("#", ""), false)) {
+    try {
+      var savedTab = localStorage.getItem("aiDash.tab");
+      if (savedTab) activateTab(savedTab, false);
+    } catch(e){}
+  }
 
   /* ---------- Library search ---------- */
   var searchBox = document.getElementById("searchBox");
