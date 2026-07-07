@@ -8,7 +8,7 @@ A digital library of curated AI knowledge — distilled notes, visual explainers
 
 | Shelf | Contents |
 |---|---|
-| ML Fundamentals | Distilled notes from [Introduction to machine learning concepts](https://learn.microsoft.com/en-us/training/modules/fundamentals-machine-learning/) (Microsoft Learn) — models, training vs inference, regression, classification, clustering, overfitting & validation |
+| ML Fundamentals | Distilled notes from [Introduction to machine learning concepts](https://learn.microsoft.com/en-us/training/modules/fundamentals-machine-learning/) (Microsoft Learn) — models, training vs inference, regression, classification, clustering (with an animated k-means run on the module's flower dataset), overfitting & validation |
 | Deep Learning | Classical ML vs DL pipelines, neural net anatomy, activation functions, animated gradient descent, key architectures |
 | Computer Vision | Images as numbers (pixel grid), animated convolution filter, vision tasks side-by-side, transformers & multimodal models |
 | NLP & LLMs | Where LLMs sit in the AI umbrella (territory-map diagram), the AI-you-don't-see iceberg, tokenization→embedding pipeline, tokens up close (text vs code vs numbers), the animated token-by-token inference loop, attention visual, context windows, hallucination & grounding |
@@ -24,4 +24,4 @@ A digital library of curated AI knowledge — distilled notes, visual explainers
 
 ## Design
 
-2026-refresh: Pantone Cloud Dancer light theme with a warm dark mode (default) — toggle via the ☀️/🌙 button, remembered per browser. Single self-contained HTML file, no dependencies; all 31 diagrams are inline SVG, several CSS-animated (gradient descent, sliding convolution, agent loop, flowing pipelines). Animations respect the OS reduced-motion setting. To update: edit `index.html` and commit. `ai-learning-dashboard.html` is now just a redirect to `index.html`.
+2026-refresh: Pantone Cloud Dancer light theme with a warm dark mode (default) — toggle via the ☀️/🌙 button, remembered per browser. Single self-contained HTML file, no dependencies; all 33 diagrams are inline SVG, several CSS-animated (gradient descent, k-means clustering, sliding convolution, agent loop, flowing pipelines). Animations respect the OS reduced-motion setting. To update: edit `index.html` and commit. `ai-learning-dashboard.html` is now just a redirect to `index.html`.
